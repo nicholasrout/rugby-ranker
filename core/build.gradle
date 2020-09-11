@@ -37,7 +37,7 @@ dependencies {
     api deps.androidX.navigation.uiKtx
     api deps.androidX.navigation.fragmentKtx
     api deps.androidX.work.runtimeKtx
-    api deps.google.material
+    api deps.google.material.material
     api deps.androidX.hilt.lifecycle.viewModel
     api deps.androidX.hilt.work
     api deps.androidX.dataStore.preferences
