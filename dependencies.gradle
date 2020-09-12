@@ -30,7 +30,7 @@ ext {
                     work: '2.5.0-alpha01',
                     hilt: '1.0.0-alpha02',
                     dataStore: '1.0.0-alpha01',
-                    compose: '1.0.0-alpha01',
+                    compose: '1.0.0-alpha02',
                     test: [
                             core: '1.3.0',
                             jUnit: '1.1.2',

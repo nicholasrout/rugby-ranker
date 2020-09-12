@@ -17,9 +17,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        useIR = true
     }
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerVersion versions.kotlin.kotlin
+        kotlinCompilerExtensionVersion versions.androidX.compose
     }
 }
 
@@ -28,9 +34,25 @@ dependencies {
     implementation project(':theme')
     implementation deps.google.ossLicenses.ossLicenses
     implementation deps.google.hilt.android
+    implementation deps.androidX.compose.runtime.runtime
+    implementation deps.androidX.compose.runtime.liveData
+    implementation deps.androidX.compose.foundation.foundation
+    implementation deps.androidX.compose.foundation.layout
+    implementation deps.androidX.compose.ui.ui
+    implementation deps.androidX.compose.ui.tooling
+    implementation deps.androidX.compose.material
+    // TODO: Wait for MDC-Android Compose Theme Adapter 1.0.0-alpha02
+    //implementation deps.google.material.composeThemeAdapter
     kapt deps.google.hilt.compiler
     kapt deps.androidX.hilt.compiler
     testImplementation deps.androidX.test.jUnit.ktx
     androidTestImplementation deps.androidX.test.core.ktx
     androidTestImplementation deps.androidX.test.runner
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += ["-Xallow-jvm-ir-dependencies", "-Xskip-prerelease-check"]
+    }
 }

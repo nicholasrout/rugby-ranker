@@ -43,9 +43,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        useIR = true
     }
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerVersion versions.kotlin.kotlin
+        kotlinCompilerExtensionVersion versions.androidX.compose
     }
 }
 
@@ -61,10 +67,18 @@ dependencies {
     implementation deps.androidX.drawerLayout
     implementation deps.androidX.viewPager2
     implementation deps.google.hilt.android
+    implementation deps.androidX.compose.runtime.runtime
     kapt deps.androidX.room.compiler
     kapt deps.google.hilt.compiler
     kapt deps.androidX.hilt.compiler
     testImplementation deps.androidX.test.jUnit.ktx
     androidTestImplementation deps.androidX.test.core.ktx
     androidTestImplementation deps.androidX.test.runner
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += ["-Xallow-jvm-ir-dependencies", "-Xskip-prerelease-check"]
+    }
 }
