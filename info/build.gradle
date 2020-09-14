@@ -1,3 +1,6 @@
+import dev.ricknout.rugbyranker.buildsrc.Libs
+import dev.ricknout.rugbyranker.buildsrc.Versions
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -5,11 +8,11 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
-    compileSdkVersion versions.compileSdk
+    compileSdkVersion Versions.compileSdk
     defaultConfig {
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.targetSdk
-        testInstrumentationRunner deps.androidX.test.instrumentationRunner
+        minSdkVersion Versions.minSdk
+        targetSdkVersion Versions.targetSdk
+        testInstrumentationRunner Libs.AndroidX.Test.instrumentationRunner
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -32,22 +35,22 @@ android {
 dependencies {
     implementation project(':core')
     implementation project(':theme')
-    implementation deps.google.ossLicenses.ossLicenses
-    implementation deps.google.hilt.android
-    implementation deps.androidX.compose.runtime.runtime
-    implementation deps.androidX.compose.runtime.liveData
-    implementation deps.androidX.compose.foundation.foundation
-    implementation deps.androidX.compose.foundation.layout
-    implementation deps.androidX.compose.ui.ui
-    implementation deps.androidX.compose.ui.tooling
-    implementation deps.androidX.compose.material
+    implementation Libs.Google.OssLicenses.ossLicenses
+    implementation Libs.Google.Hilt.android
+    implementation Libs.AndroidX.Compose.Runtime.runtime
+    implementation Libs.AndroidX.Compose.Runtime.liveData
+    implementation Libs.AndroidX.Compose.Foundation.foundation
+    implementation Libs.AndroidX.Compose.Foundation.layout
+    implementation Libs.AndroidX.Compose.UI.ui
+    implementation Libs.AndroidX.Compose.UI.tooling
+    implementation Libs.AndroidX.Compose.material
     // TODO: Wait for MDC-Android Compose Theme Adapter 1.0.0-alpha02
-    //implementation deps.google.material.composeThemeAdapter
-    kapt deps.google.hilt.compiler
-    kapt deps.androidX.hilt.compiler
-    testImplementation deps.androidX.test.jUnit.ktx
-    androidTestImplementation deps.androidX.test.core.ktx
-    androidTestImplementation deps.androidX.test.runner
+    //implementation Libs.Google.Material.composeThemeAdapter
+    kapt Libs.Google.Hilt.compiler
+    kapt Libs.AndroidX.Hilt.compiler
+    testImplementation Libs.AndroidX.Test.JUnit.ktx
+    androidTestImplementation Libs.AndroidX.Test.Core.ktx
+    androidTestImplementation Libs.AndroidX.Test.runner
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
