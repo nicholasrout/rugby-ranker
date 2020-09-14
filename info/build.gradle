@@ -27,8 +27,8 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerVersion versions.kotlin.kotlin
-        kotlinCompilerExtensionVersion versions.androidX.compose
+        kotlinCompilerVersion Versions.Kotlin.kotlin
+        kotlinCompilerExtensionVersion Versions.AndroidX.compose
     }
 }
 

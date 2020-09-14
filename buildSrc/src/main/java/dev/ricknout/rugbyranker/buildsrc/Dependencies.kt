@@ -31,6 +31,7 @@ object Versions {
         const val work = "2.5.0-alpha01"
         const val hilt = "1.0.0-alpha02"
         const val dataStore = "1.0.0-alpha01"
+        const val compose = "1.0.0-alpha02"
         object Test {
             const val core = "1.3.0"
             const val jUnit = "1.1.2"
@@ -111,6 +112,21 @@ object Libs {
         object DataStore {
             const val preferences = "androidx.datastore:datastore-preferences:${Versions.AndroidX.dataStore}"
         }
+        object Compose {
+            const val material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
+            object Runtime {
+                const val runtime = "androidx.compose.runtime:runtime:${Versions.AndroidX.compose}"
+                const val liveData = "androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}"
+            }
+            object Foundation {
+                const val foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
+                const val layout = "androidx.compose.foundation:foundation-layout:${Versions.AndroidX.compose}"
+            }
+            object UI {
+                const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
+                const val tooling = "androidx.ui:ui-tooling:${Versions.AndroidX.compose}"
+            }
+        }
         object Test {
             const val runner = "androidx.test:runner:${Versions.AndroidX.Test.runner}"
             const val instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -123,7 +139,10 @@ object Libs {
         }
     }
     object Google {
-        const val material = "com.google.android.material:material:${Versions.Google.material}"
+        object Material {
+            const val material = "com.google.android.material:material:${Versions.Google.material}"
+            const val composeThemeAdapter = "com.google.android.material:compose-theme-adapter:${Versions.AndroidX.compose}"
+        }
         object Hilt {
             const val compiler = "com.google.dagger:hilt-compiler:${Versions.Google.hilt}"
             const val android = "com.google.dagger:hilt-android:${Versions.Google.hilt}"
