@@ -44,8 +44,7 @@ dependencies {
     implementation Libs.AndroidX.Compose.UI.ui
     implementation Libs.AndroidX.Compose.UI.tooling
     implementation Libs.AndroidX.Compose.material
-    // TODO: Wait for MDC-Android Compose Theme Adapter 1.0.0-alpha02
-    //implementation Libs.Google.Material.composeThemeAdapter
+    implementation Libs.Google.Material.composeThemeAdapter
     kapt Libs.Google.Hilt.compiler
     kapt Libs.AndroidX.Hilt.compiler
     testImplementation Libs.AndroidX.Test.JUnit.ktx
