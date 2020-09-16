@@ -77,44 +77,49 @@ class InfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         setContent {
-            MdcTheme {
-                ProvideDisplayInsets {
-                    val scrollState = rememberScrollState()
-                    Scaffold(
-                        topBar = {
-                            Surface(
-                                modifier = Modifier.fillMaxWidth(),
-                                elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
-                            ) {
-                                Row(modifier = Modifier.statusBarsPadding()) {
-                                    Spacer(Modifier.navigationBarWidth(HorizontalSide.Left))
-                                    RugbyRankerButton(
-                                        onClick = { openDrawer() },
-                                        contentColor = MaterialTheme.colors.onSurface,
-                                        rippleColor = MaterialTheme.colors.onSurface
-                                    ) {
-                                        Icon(Icons.Default.Menu)
-                                    }
-                                    Spacer(Modifier.navigationBarWidth(HorizontalSide.Right))
+            Info()
+        }
+    }
+
+    @Composable
+    fun Info() {
+        MdcTheme {
+            ProvideDisplayInsets {
+                val scrollState = rememberScrollState()
+                Scaffold(
+                    topBar = {
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
+                        ) {
+                            Row(modifier = Modifier.statusBarsPadding()) {
+                                Spacer(Modifier.navigationBarWidth(HorizontalSide.Left))
+                                RugbyRankerButton(
+                                    onClick = { openDrawer() },
+                                    contentColor = MaterialTheme.colors.onSurface,
+                                    rippleColor = MaterialTheme.colors.onSurface
+                                ) {
+                                    Icon(Icons.Default.Menu)
                                 }
+                                Spacer(Modifier.navigationBarWidth(HorizontalSide.Right))
                             }
                         }
-                    ) {
-                        ScrollableColumn(scrollState = scrollState) {
-                            Column(modifier = Modifier.navigationBarsPadding()) {
-                                UrlButton(
-                                    text = stringResource(R.string.how_are_rankings_calculated),
-                                    url = RANKINGS_EXPLANATION_URL
-                                )
-                                ShareButton()
-                                UrlButton(
-                                    text = stringResource(R.string.view_source_code),
-                                    url = GITHUB_URL
-                                )
-                                OssButton()
-                                ThemeButton()
-                                VersionText(infoViewModel = infoViewModel)
-                            }
+                    }
+                ) {
+                    ScrollableColumn(scrollState = scrollState) {
+                        Column(modifier = Modifier.navigationBarsPadding()) {
+                            UrlButton(
+                                text = stringResource(R.string.how_are_rankings_calculated),
+                                url = RANKINGS_EXPLANATION_URL
+                            )
+                            ShareButton()
+                            UrlButton(
+                                text = stringResource(R.string.view_source_code),
+                                url = GITHUB_URL
+                            )
+                            OssButton()
+                            ThemeButton()
+                            VersionText(infoViewModel = infoViewModel)
                         }
                     }
                 }
