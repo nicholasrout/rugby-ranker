@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.animate
+import androidx.compose.foundation.Icon
 import androidx.compose.foundation.IndicationAmbient
 import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.ProvideTextStyle
+import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
@@ -20,10 +23,14 @@ import androidx.compose.foundation.layout.defaultMinSizeConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.EmphasisAmbient
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideEmphasis
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.ripple.RippleIndication
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -41,11 +49,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
 import dev.ricknout.rugbyranker.core.ui.openDrawer
 import dev.ricknout.rugbyranker.core.util.CustomTabUtils
 import dev.ricknout.rugbyranker.info.R
-import dev.ricknout.rugbyranker.info.databinding.FragmentInfoBinding
 import dev.ricknout.rugbyranker.theme.ui.ThemeViewModel
 import dev.ricknout.rugbyranker.theme.util.getCustomTabsIntentColorScheme
 import kotlinx.coroutines.Dispatchers
@@ -60,56 +66,62 @@ class InfoFragment : Fragment() {
 
     private val themeViewModel: ThemeViewModel by activityViewModels()
 
-    private var _binding: FragmentInfoBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentInfoBinding.inflate(inflater, container, false)
-        binding.composeView.setContent {
+    ) = ComposeView(requireContext()).apply {
+        setContent {
             MdcTheme {
-                Surface {
-                    Column {
-                        UrlButton(
-                            text = stringResource(R.string.how_are_rankings_calculated),
-                            url = RANKINGS_EXPLANATION_URL
-                        )
-                        ShareButton()
-                        UrlButton(
-                            text = stringResource(R.string.view_source_code),
-                            url = GITHUB_URL
-                        )
-                        OssButton()
-                        ThemeButton()
-                        VersionText(infoViewModel = infoViewModel)
+                val scrollState = rememberScrollState()
+                Scaffold(
+                    topBar = {
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
+                        ) {
+                            Row {
+                                RugbyRankerButton(
+                                    onClick = { openDrawer() },
+                                    contentColor = MaterialTheme.colors.onSurface,
+                                    rippleColor = MaterialTheme.colors.onSurface
+                                ) {
+                                    Icon(Icons.Default.Menu)
+                                }
+                            }
+                        }
+                    }
+                ) {
+                    ScrollableColumn(scrollState = scrollState) {
+                        Column {
+                            UrlButton(
+                                text = stringResource(R.string.how_are_rankings_calculated),
+                                url = RANKINGS_EXPLANATION_URL
+                            )
+                            ShareButton()
+                            UrlButton(
+                                text = stringResource(R.string.view_source_code),
+                                url = GITHUB_URL
+                            )
+                            OssButton()
+                            ThemeButton()
+                            VersionText(infoViewModel = infoViewModel)
+                        }
                     }
                 }
             }
         }
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupNavigation()
         setupEdgeToEdge()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
-    private fun setupNavigation() {
-        binding.navigation.setOnClickListener { openDrawer() }
-    }
-
     private fun setupEdgeToEdge() {
-        binding.appBarLayout.applySystemWindowInsetsToPadding(left = true, top = true, right = true)
-        binding.nestedScrollView.applySystemWindowInsetsToPadding(left = true, right = true, bottom = true)
+        // TODO: Apply system window insets to Compose
+        //binding.appBarLayout.applySystemWindowInsetsToPadding(left = true, top = true, right = true)
+        //binding.nestedScrollView.applySystemWindowInsetsToPadding(left = true, right = true, bottom = true)
     }
 
     @Composable
@@ -204,17 +216,19 @@ class InfoFragment : Fragment() {
 fun RugbyRankerButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentColor: Color = MaterialTheme.colors.primary,
+    rippleColor: Color = MaterialTheme.colors.primary,
     content: @Composable RowScope.() -> Unit
 ) {
     val interactionState = remember { InteractionState() }
     Surface(
         shape = MaterialTheme.shapes.small,
         color = Color.Transparent,
-        contentColor = MaterialTheme.colors.primary,
+        contentColor = contentColor,
         modifier = modifier.clickable(
             onClick = onClick,
             interactionState = interactionState,
-            indication = RippleIndication(color = MaterialTheme.colors.primary)
+            indication = RippleIndication(color = rippleColor)
         )
     ) {
         ProvideTextStyle(

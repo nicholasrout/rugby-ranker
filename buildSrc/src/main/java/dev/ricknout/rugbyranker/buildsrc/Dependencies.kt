@@ -113,7 +113,7 @@ object Libs {
             const val preferences = "androidx.datastore:datastore-preferences:${Versions.AndroidX.dataStore}"
         }
         object Compose {
-            const val material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
+            const val animation = "androidx.compose.animation:animation:${Versions.AndroidX.compose}"
             object Runtime {
                 const val runtime = "androidx.compose.runtime:runtime:${Versions.AndroidX.compose}"
                 const val liveData = "androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}"
@@ -125,6 +125,10 @@ object Libs {
             object UI {
                 const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
                 const val tooling = "androidx.ui:ui-tooling:${Versions.AndroidX.compose}"
+            }
+            object Material {
+                const val material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
+                const val icons = "androidx.compose.material:material-icons-extended:${Versions.AndroidX.compose}"
             }
         }
         object Test {
