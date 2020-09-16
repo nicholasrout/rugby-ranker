@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -73,12 +74,12 @@ class InfoFragment : Fragment() {
                 Surface {
                     Column {
                         UrlButton(
-                            text = getString(R.string.how_are_rankings_calculated),
+                            text = stringResource(R.string.how_are_rankings_calculated),
                             url = RANKINGS_EXPLANATION_URL
                         )
                         ShareButton()
                         UrlButton(
-                            text = getString(R.string.view_source_code),
+                            text = stringResource(R.string.view_source_code),
                             url = GITHUB_URL
                         )
                         OssButton()
@@ -146,7 +147,7 @@ class InfoFragment : Fragment() {
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = getString(R.string.share_this_app))
+            Text(text = stringResource(R.string.share_this_app))
         }
     }
 
@@ -159,7 +160,7 @@ class InfoFragment : Fragment() {
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = getString(R.string.open_source_licenses))
+            Text(text = stringResource(R.string.open_source_licenses))
         }
     }
 
@@ -176,17 +177,16 @@ class InfoFragment : Fragment() {
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = getString(R.string.choose_theme))
+            Text(text = stringResource(R.string.choose_theme))
         }
     }
 
     @Composable
     fun VersionText(infoViewModel: InfoViewModel) {
         val version by infoViewModel.version.observeAsState()
-        val text = getString(R.string.version, version)
         ProvideEmphasis(emphasis = EmphasisAmbient.current.medium) {
             Text(
-                text = text,
+                text = stringResource(R.string.version, version ?: ""),
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier.fillMaxWidth().height(56.dp).padding(16.dp)
             )
