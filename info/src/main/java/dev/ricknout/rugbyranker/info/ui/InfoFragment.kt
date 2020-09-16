@@ -3,7 +3,6 @@ package dev.ricknout.rugbyranker.info.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.animate
 import androidx.compose.foundation.Icon
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.InnerPadding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSizeConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,6 +51,11 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dev.ricknout.rugbyranker.core.ui.openDrawer
 import dev.ricknout.rugbyranker.core.util.CustomTabUtils
+import dev.ricknout.rugbyranker.core.util.HorizontalSide
+import dev.ricknout.rugbyranker.core.util.ProvideDisplayInsets
+import dev.ricknout.rugbyranker.core.util.navigationBarWidth
+import dev.ricknout.rugbyranker.core.util.navigationBarsPadding
+import dev.ricknout.rugbyranker.core.util.statusBarsPadding
 import dev.ricknout.rugbyranker.info.R
 import dev.ricknout.rugbyranker.theme.ui.ThemeViewModel
 import dev.ricknout.rugbyranker.theme.util.getCustomTabsIntentColorScheme
@@ -73,55 +78,48 @@ class InfoFragment : Fragment() {
     ) = ComposeView(requireContext()).apply {
         setContent {
             MdcTheme {
-                val scrollState = rememberScrollState()
-                Scaffold(
-                    topBar = {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
-                        ) {
-                            Row {
-                                RugbyRankerButton(
-                                    onClick = { openDrawer() },
-                                    contentColor = MaterialTheme.colors.onSurface,
-                                    rippleColor = MaterialTheme.colors.onSurface
-                                ) {
-                                    Icon(Icons.Default.Menu)
+                ProvideDisplayInsets {
+                    val scrollState = rememberScrollState()
+                    Scaffold(
+                        topBar = {
+                            Surface(
+                                modifier = Modifier.fillMaxWidth(),
+                                elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
+                            ) {
+                                Row(modifier = Modifier.statusBarsPadding()) {
+                                    Spacer(Modifier.navigationBarWidth(HorizontalSide.Left))
+                                    RugbyRankerButton(
+                                        onClick = { openDrawer() },
+                                        contentColor = MaterialTheme.colors.onSurface,
+                                        rippleColor = MaterialTheme.colors.onSurface
+                                    ) {
+                                        Icon(Icons.Default.Menu)
+                                    }
+                                    Spacer(Modifier.navigationBarWidth(HorizontalSide.Right))
                                 }
                             }
                         }
-                    }
-                ) {
-                    ScrollableColumn(scrollState = scrollState) {
-                        Column {
-                            UrlButton(
-                                text = stringResource(R.string.how_are_rankings_calculated),
-                                url = RANKINGS_EXPLANATION_URL
-                            )
-                            ShareButton()
-                            UrlButton(
-                                text = stringResource(R.string.view_source_code),
-                                url = GITHUB_URL
-                            )
-                            OssButton()
-                            ThemeButton()
-                            VersionText(infoViewModel = infoViewModel)
+                    ) {
+                        ScrollableColumn(scrollState = scrollState) {
+                            Column(modifier = Modifier.navigationBarsPadding()) {
+                                UrlButton(
+                                    text = stringResource(R.string.how_are_rankings_calculated),
+                                    url = RANKINGS_EXPLANATION_URL
+                                )
+                                ShareButton()
+                                UrlButton(
+                                    text = stringResource(R.string.view_source_code),
+                                    url = GITHUB_URL
+                                )
+                                OssButton()
+                                ThemeButton()
+                                VersionText(infoViewModel = infoViewModel)
+                            }
                         }
                     }
                 }
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupEdgeToEdge()
-    }
-
-    private fun setupEdgeToEdge() {
-        // TODO: Apply system window insets to Compose
-        //binding.appBarLayout.applySystemWindowInsetsToPadding(left = true, top = true, right = true)
-        //binding.nestedScrollView.applySystemWindowInsetsToPadding(left = true, right = true, bottom = true)
     }
 
     @Composable

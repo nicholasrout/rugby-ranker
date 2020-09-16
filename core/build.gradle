@@ -17,6 +17,14 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        useIR = true
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerVersion Versions.Kotlin.kotlin
+        kotlinCompilerExtensionVersion Versions.AndroidX.compose
     }
 }
 
@@ -48,6 +56,8 @@ dependencies {
     api Libs.Square.Retrofit.retrofit
     api Libs.Square.Retrofit.gsonConverter
     api Libs.Insetter.ktx
+    implementation Libs.AndroidX.Compose.Runtime.runtime
+    implementation Libs.AndroidX.Compose.Foundation.foundation
     testImplementation Libs.AndroidX.Test.JUnit.ktx
     androidTestImplementation Libs.AndroidX.Test.Core.ktx
     androidTestImplementation Libs.AndroidX.Test.runner
