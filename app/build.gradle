@@ -70,7 +70,6 @@ dependencies {
     implementation Libs.AndroidX.drawerLayout
     implementation Libs.AndroidX.viewPager2
     implementation Libs.Google.Hilt.android
-    implementation Libs.AndroidX.Compose.Runtime.runtime
     kapt Libs.AndroidX.Room.compiler
     kapt Libs.Google.Hilt.compiler
     kapt Libs.AndroidX.Hilt.compiler

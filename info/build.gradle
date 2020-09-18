@@ -36,16 +36,6 @@ dependencies {
     implementation project(':theme')
     implementation Libs.Google.OssLicenses.ossLicenses
     implementation Libs.Google.Hilt.android
-    implementation Libs.AndroidX.Compose.Runtime.runtime
-    implementation Libs.AndroidX.Compose.Runtime.liveData
-    implementation Libs.AndroidX.Compose.Foundation.foundation
-    implementation Libs.AndroidX.Compose.Foundation.layout
-    implementation Libs.AndroidX.Compose.UI.ui
-    implementation Libs.AndroidX.Compose.UI.tooling
-    implementation Libs.AndroidX.Compose.Material.material
-    implementation Libs.AndroidX.Compose.Material.icons
-    implementation Libs.AndroidX.Compose.animation
-    implementation Libs.Google.Material.composeThemeAdapter
     kapt Libs.Google.Hilt.compiler
     kapt Libs.AndroidX.Hilt.compiler
     testImplementation Libs.AndroidX.Test.JUnit.ktx

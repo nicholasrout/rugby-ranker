@@ -49,6 +49,7 @@ dependencies {
     api Libs.AndroidX.Navigation.fragmentKtx
     api Libs.AndroidX.Work.runtimeKtx
     api Libs.Google.Material.material
+    api Libs.Google.Material.composeThemeAdapter
     api Libs.AndroidX.Hilt.Lifecycle.viewModel
     api Libs.AndroidX.Hilt.work
     api Libs.AndroidX.DataStore.preferences
@@ -56,8 +57,15 @@ dependencies {
     api Libs.Square.Retrofit.retrofit
     api Libs.Square.Retrofit.gsonConverter
     api Libs.Insetter.ktx
-    implementation Libs.AndroidX.Compose.Runtime.runtime
-    implementation Libs.AndroidX.Compose.Foundation.foundation
+    api Libs.AndroidX.Compose.Runtime.runtime
+    api Libs.AndroidX.Compose.Runtime.liveData
+    api Libs.AndroidX.Compose.Foundation.foundation
+    api Libs.AndroidX.Compose.Foundation.layout
+    api Libs.AndroidX.Compose.UI.ui
+    api Libs.AndroidX.Compose.UI.tooling
+    api Libs.AndroidX.Compose.Material.material
+    api Libs.AndroidX.Compose.Material.icons
+    api Libs.AndroidX.Compose.animation
     testImplementation Libs.AndroidX.Test.JUnit.ktx
     androidTestImplementation Libs.AndroidX.Test.Core.ktx
     androidTestImplementation Libs.AndroidX.Test.runner
