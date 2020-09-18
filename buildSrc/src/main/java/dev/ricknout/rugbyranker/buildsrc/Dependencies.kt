@@ -31,7 +31,7 @@ object Versions {
         const val work = "2.5.0-alpha02"
         const val hilt = "1.0.0-alpha02"
         const val dataStore = "1.0.0-alpha01"
-        const val compose = "1.0.0-alpha02"
+        const val compose = "1.0.0-alpha03"
         object Test {
             const val core = "1.3.0"
             const val jUnit = "1.1.2"

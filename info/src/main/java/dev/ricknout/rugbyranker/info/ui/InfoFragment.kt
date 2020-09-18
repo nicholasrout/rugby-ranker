@@ -15,7 +15,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.InnerPadding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -245,9 +245,9 @@ fun RugbyRankerButton(
                 Modifier
                     .defaultMinSizeConstraints(minHeight = 56.dp)
                     .indication(interactionState, IndicationAmbient.current())
-                    .padding(InnerPadding(16.dp)),
+                    .padding(PaddingValues(16.dp)),
                 horizontalArrangement = Arrangement.Start,
-                verticalGravity = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
                 children = content
             )
         }
