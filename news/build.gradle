@@ -20,9 +20,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        useIR = true
     }
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerVersion Versions.Kotlin.kotlin
+        kotlinCompilerExtensionVersion Versions.AndroidX.compose
     }
 }
 
@@ -30,6 +36,7 @@ dependencies {
     implementation project(':core')
     implementation project(':theme')
     implementation Libs.coil
+    implementation Libs.Accompanist.coil
     implementation Libs.AndroidX.Paging.runtime
     implementation Libs.Google.Hilt.android
     kapt Libs.Google.Hilt.compiler
