@@ -8,7 +8,7 @@ object Versions {
     const val ktlint = "0.39.0"
     const val coil = "1.0.0-rc3"
     const val insetter = "0.3.1"
-    const val accompanist = "0.2.2"
+    const val accompanist = "0.3.0"
     object Kotlin {
         const val kotlin = "1.4.10"
         const val coroutines = "1.3.9"
