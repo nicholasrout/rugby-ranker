@@ -15,7 +15,6 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -57,7 +56,7 @@ import dev.ricknout.rugbyranker.core.util.CustomTabUtils
 import dev.ricknout.rugbyranker.core.util.HorizontalSide
 import dev.ricknout.rugbyranker.core.util.ProvideDisplayInsets
 import dev.ricknout.rugbyranker.core.util.navigationBarWidth
-import dev.ricknout.rugbyranker.core.util.navigationBarsPadding
+import dev.ricknout.rugbyranker.core.util.navigationBarsHeight
 import dev.ricknout.rugbyranker.core.util.statusBarsPadding
 import dev.ricknout.rugbyranker.info.R
 import dev.ricknout.rugbyranker.theme.ui.ThemeViewModel
@@ -127,20 +126,19 @@ class InfoFragment : Fragment() {
                     }
                 ) {
                     ScrollableColumn(scrollState = scrollState) {
-                        Column(modifier = Modifier.navigationBarsPadding()) {
-                            UrlButton(
-                                text = stringResource(R.string.how_are_rankings_calculated),
-                                url = RANKINGS_EXPLANATION_URL
-                            )
-                            ShareButton()
-                            UrlButton(
-                                text = stringResource(R.string.view_source_code),
-                                url = GITHUB_URL
-                            )
-                            OssButton()
-                            ThemeButton()
-                            VersionText(infoViewModel = infoViewModel)
-                        }
+                        UrlButton(
+                            text = stringResource(R.string.how_are_rankings_calculated),
+                            url = RANKINGS_EXPLANATION_URL
+                        )
+                        ShareButton()
+                        UrlButton(
+                            text = stringResource(R.string.view_source_code),
+                            url = GITHUB_URL
+                        )
+                        OssButton()
+                        ThemeButton()
+                        VersionText(infoViewModel = infoViewModel)
+                        Spacer(Modifier.navigationBarsHeight())
                     }
                 }
             }
@@ -223,7 +221,7 @@ class InfoFragment : Fragment() {
             Text(
                 text = stringResource(R.string.version, version ?: ""),
                 style = MaterialTheme.typography.body1,
-                modifier = Modifier.fillMaxWidth().height(56.dp).padding(16.dp)
+                modifier = Modifier.height(56.dp).padding(16.dp)
             )
         }
     }
