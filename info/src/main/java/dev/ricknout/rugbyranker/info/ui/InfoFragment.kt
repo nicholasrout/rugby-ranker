@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.animate
+import androidx.compose.foundation.AmbientIndication
 import androidx.compose.foundation.Icon
-import androidx.compose.foundation.IndicationAmbient
 import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.ProvideTextStyle
 import androidx.compose.foundation.ScrollableColumn
@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.EmphasisAmbient
+import androidx.compose.material.AmbientEmphasisLevels
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideEmphasis
 import androidx.compose.material.Scaffold
@@ -219,7 +219,7 @@ class InfoFragment : Fragment() {
     @Composable
     fun VersionText(infoViewModel: InfoViewModel) {
         val version by infoViewModel.version.observeAsState()
-        ProvideEmphasis(emphasis = EmphasisAmbient.current.medium) {
+        ProvideEmphasis(emphasis = AmbientEmphasisLevels.current.medium) {
             Text(
                 text = stringResource(R.string.version, version ?: ""),
                 style = MaterialTheme.typography.body1,
@@ -260,7 +260,7 @@ fun RugbyRankerButton(
             Row(
                 Modifier
                     .defaultMinSizeConstraints(minHeight = 56.dp)
-                    .indication(interactionState, IndicationAmbient.current())
+                    .indication(interactionState, AmbientIndication.current())
                     .padding(PaddingValues(16.dp)),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,

@@ -8,7 +8,7 @@ object Versions {
     const val ktlint = "0.39.0"
     const val coil = "1.0.0-rc3"
     const val insetter = "0.3.1"
-    const val accompanist = "0.3.0"
+    const val accompanist = "0.3.1"
     object Kotlin {
         const val kotlin = "1.4.10"
         const val coroutines = "1.3.9"
@@ -32,7 +32,7 @@ object Versions {
         const val work = "2.5.0-alpha03"
         const val hilt = "1.0.0-alpha02"
         const val dataStore = "1.0.0-alpha02"
-        const val compose = "1.0.0-alpha04"
+        const val compose = "1.0.0-alpha05"
         object Test {
             const val core = "1.3.0"
             const val jUnit = "1.1.2"
