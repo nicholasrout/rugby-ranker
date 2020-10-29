@@ -4,23 +4,63 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.animate
+import androidx.compose.foundation.InteractionState
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.ExperimentalLazyDsl
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.AmbientEmphasisLevels
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideEmphasis
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.integerResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.view.doOnPreDraw
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import androidx.paging.LoadState
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.elevation.ElevationOverlayProvider
-import com.google.android.material.snackbar.Snackbar
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemsIndexed
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.transition.MaterialFadeThrough
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
+import dev.chrisbanes.accompanist.coil.CoilImage
+import dev.ricknout.rugbyranker.core.ui.RugbyRankerButton
 import dev.ricknout.rugbyranker.core.ui.openDrawer
 import dev.ricknout.rugbyranker.core.util.CustomTabUtils
+import dev.ricknout.rugbyranker.core.util.DateUtils
+import dev.ricknout.rugbyranker.core.util.HorizontalSide
+import dev.ricknout.rugbyranker.core.util.InsetsAmbient
+import dev.ricknout.rugbyranker.core.util.ProvideDisplayInsets
+import dev.ricknout.rugbyranker.core.util.navigationBarWidth
+import dev.ricknout.rugbyranker.core.util.statusBarsPadding
+import dev.ricknout.rugbyranker.core.util.toPaddingValues
 import dev.ricknout.rugbyranker.news.R
-import dev.ricknout.rugbyranker.news.databinding.FragmentNewsBinding
+import dev.ricknout.rugbyranker.news.model.News
 import dev.ricknout.rugbyranker.news.model.Type
 import dev.ricknout.rugbyranker.theme.ui.ThemeViewModel
 import dev.ricknout.rugbyranker.theme.util.getCustomTabsIntentColorScheme
@@ -28,6 +68,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.floor
 
 @AndroidEntryPoint
 class NewsFragment : Fragment() {
@@ -44,22 +85,6 @@ class NewsFragment : Fragment() {
 
     private val themeViewModel: ThemeViewModel by activityViewModels()
 
-    private val adapter = NewsAdapter { news ->
-        lifecycleScope.launch {
-            val theme = themeViewModel.theme.first()
-            withContext(Dispatchers.Main) {
-                CustomTabUtils.launchCustomTab(
-                    requireContext(),
-                    news.articleUrl,
-                    theme.getCustomTabsIntentColorScheme()
-                )
-            }
-        }
-    }
-
-    private var _binding: FragmentNewsBinding? = null
-    private val binding get() = _binding!!
-
     private val transitionDuration by lazy {
         resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
     }
@@ -74,88 +99,211 @@ class NewsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentNewsBinding.inflate(inflater, container, false)
-        return binding.root
+    ) = ComposeView(requireContext()).apply {
+        isTransitionGroup = true
+        setContent {
+            News(newsViewModel)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        setupViewModel()
-        setupNavigation()
-        setupSwipeRefresh()
-        setupRecyclerView()
-        setupEdgeToEdge()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
+    // Previous swipe refresh UI setup
+    /*val primaryColor = MaterialColors.getColor(binding.swipeRefreshLayout, R.attr.colorPrimary)
+    val elevationOverlayProvider = ElevationOverlayProvider(requireContext())
+    val surfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+        resources.getDimension(R.dimen.elevation_swipe_refresh_layout)
+    )
+    binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(surfaceColor)
+    binding.swipeRefreshLayout.setColorSchemeColors(primaryColor)
+    binding.swipeRefreshLayout.setProgressViewOffset(
+        true,
+        binding.swipeRefreshLayout.progressViewStartOffset,
+        binding.swipeRefreshLayout.progressViewEndOffset
+    )
+    binding.swipeRefreshLayout.setOnRefreshListener { adapter.refresh() }*/
 
-    private fun setupViewModel() {
-        newsViewModel.news.observe(
-            viewLifecycleOwner,
-            { pagingData ->
-                adapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
+    // Previous paging load state, retry UI, and progress indicator UI
+    /*binding.recyclerView.adapter = adapter
+    adapter.addLoadStateListener { combinedLoadStates ->
+        when (combinedLoadStates.refresh) {
+            is LoadState.Loading -> {
+                binding.retry.isVisible = false
+                if (adapter.itemCount == 0) binding.progressIndicator.show() else binding.progressIndicator.hide()
             }
-        )
-    }
-
-    private fun setupNavigation() {
-        binding.navigation.setOnClickListener { openDrawer() }
-    }
-
-    private fun setupSwipeRefresh() {
-        val primaryColor = MaterialColors.getColor(binding.swipeRefreshLayout, R.attr.colorPrimary)
-        val elevationOverlayProvider = ElevationOverlayProvider(requireContext())
-        val surfaceColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-            resources.getDimension(R.dimen.elevation_swipe_refresh_layout)
-        )
-        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(surfaceColor)
-        binding.swipeRefreshLayout.setColorSchemeColors(primaryColor)
-        binding.swipeRefreshLayout.setProgressViewOffset(
-            true,
-            binding.swipeRefreshLayout.progressViewStartOffset,
-            binding.swipeRefreshLayout.progressViewEndOffset
-        )
-        binding.swipeRefreshLayout.setOnRefreshListener { adapter.refresh() }
-    }
-
-    private fun setupRecyclerView() {
-        binding.recyclerView.adapter = adapter
-        adapter.addLoadStateListener { combinedLoadStates ->
-            when (combinedLoadStates.refresh) {
-                is LoadState.Loading -> {
-                    binding.retry.isVisible = false
-                    if (adapter.itemCount == 0) binding.progressIndicator.show() else binding.progressIndicator.hide()
+            is LoadState.NotLoading -> {
+                binding.swipeRefreshLayout.isRefreshing = false
+                binding.retry.isVisible = false
+                binding.progressIndicator.hide()
+            }
+            is LoadState.Error -> {
+                binding.swipeRefreshLayout.isRefreshing = false
+                binding.retry.isVisible = adapter.itemCount == 0
+                binding.progressIndicator.hide()
+                if (adapter.itemCount > 0) {
+                    Snackbar.make(
+                        binding.root,
+                        R.string.failed_to_refresh_news,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
-                is LoadState.NotLoading -> {
-                    binding.swipeRefreshLayout.isRefreshing = false
-                    binding.retry.isVisible = false
-                    binding.progressIndicator.hide()
+            }
+        }
+    }
+    binding.retryButton.setOnClickListener { adapter.retry() }*/
+
+    // TODO: Use LazyGrid over LazyColumn when available: https://issuetracker.google.com/issues/162213211
+    // TODO: Listen to paging load state and...
+    // TODO: Implement swipe refresh UI
+    // TODO: Implement retry UI
+    // TODO: Implement progress indicator UI
+    // TODO: Implement snackbar UI in Scaffold
+    @Composable
+    fun News(newsViewModel: NewsViewModel) {
+        MdcTheme {
+            ProvideDisplayInsets {
+                val lazyListState = rememberLazyListState()
+                Scaffold(
+                    topBar = {
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = animate(if (lazyListState.firstVisibleItemScrollOffset > 0f) 4.dp else 0.dp)
+                        ) {
+                            Row(modifier = Modifier.statusBarsPadding()) {
+                                Spacer(Modifier.navigationBarWidth(HorizontalSide.Left))
+                                RugbyRankerButton(
+                                    onClick = { openDrawer() },
+                                    contentColor = MaterialTheme.colors.onSurface,
+                                    rippleColor = MaterialTheme.colors.onSurface
+                                ) {
+                                    Icon(Icons.Default.Menu)
+                                }
+                                Spacer(Modifier.navigationBarWidth(HorizontalSide.Right))
+                            }
+                        }
+                    }
+                ) {
+                    NewsList(newsViewModel, lazyListState)
                 }
-                is LoadState.Error -> {
-                    binding.swipeRefreshLayout.isRefreshing = false
-                    binding.retry.isVisible = adapter.itemCount == 0
-                    binding.progressIndicator.hide()
-                    if (adapter.itemCount > 0) {
-                        Snackbar.make(
-                            binding.root,
-                            R.string.failed_to_refresh_news,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+            }
+        }
+    }
+
+    @Composable
+    @OptIn(ExperimentalLazyDsl::class)
+    fun NewsList(
+        newsViewModel: NewsViewModel,
+        lazyListState: LazyListState
+    ) {
+        val lazyPagingItems = newsViewModel.news.collectAsLazyPagingItems()
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = InsetsAmbient.current.navigationBars.toPaddingValues(top = false)
+        ) {
+            itemsIndexed(lazyPagingItems) { index: Int, value: News? ->
+                val news = value ?: return@itemsIndexed
+                val spanCount = integerResource(R.integer.span_count_grid)
+                val row = floor(index / spanCount.toFloat()).toInt()
+                NewsItem(news, spanCount, row, index) {
+                    lifecycleScope.launch {
+                        val theme = themeViewModel.theme.first()
+                        withContext(Dispatchers.Main) {
+                            CustomTabUtils.launchCustomTab(
+                                requireContext(),
+                                news.articleUrl,
+                                theme.getCustomTabsIntentColorScheme()
+                            )
+                        }
                     }
                 }
             }
         }
-        binding.retryButton.setOnClickListener { adapter.retry() }
     }
 
-    private fun setupEdgeToEdge() {
-        binding.appBarLayout.applySystemWindowInsetsToPadding(left = true, top = true, right = true)
-        binding.recyclerView.applySystemWindowInsetsToPadding(left = true, right = true, bottom = true)
+    @Composable
+    fun NewsItem(
+        news: News,
+        spanCount: Int,
+        row: Int,
+        index: Int,
+        onClick: () -> Unit
+    ) {
+        MdcTheme {
+            val color = when {
+                (spanCount % 2 != 0 || row % 2 == 0) && index % 2 == 0 -> {
+                    MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
+                }
+                (spanCount % 2 == 0 && row % 2 != 0) && index % 2 != 0 -> {
+                    MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
+                }
+                else -> MaterialTheme.colors.surface
+            }
+            val interactionState = remember { InteractionState() }
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                color = color,
+                contentColor = MaterialTheme.colors.onSurface,
+                modifier = Modifier.clickable(
+                    onClick = onClick,
+                    interactionState = interactionState
+                )
+            ) {
+                NewsContent(news)
+            }
+        }
+    }
+
+    @Composable
+    fun NewsContent(news: News) {
+        Column {
+            CoilImage(
+                modifier = Modifier.height(224.dp),
+                data = news.imageUrl ?: "",
+                contentScale = ContentScale.Crop,
+                fadeIn = true,
+                loading = {
+                    Box(Modifier.fillMaxSize()) {
+                        Icon(
+                            asset = Icons.Outlined.Image,
+                            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
+            )
+            if (news.subtitle != null) Text(
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                text = news.subtitle,
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.body1
+            )
+            Text(
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                text = news.title,
+                style = MaterialTheme.typography.h6
+            )
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = news.summary,
+                style = MaterialTheme.typography.body1
+            )
+            val isCurrentDay = DateUtils.isDayCurrentDay(news.timeMillis)
+            val date = if (isCurrentDay) {
+                stringResource(R.string.today)
+            } else {
+                DateUtils.getDate(DateUtils.DATE_FORMAT_D_MMM_YYYY, news.timeMillis)
+            }
+            ProvideEmphasis(emphasis = AmbientEmphasisLevels.current.medium) {
+                Text(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    text = date,
+                    style = MaterialTheme.typography.body1
+                )
+            }
+        }
     }
 }
