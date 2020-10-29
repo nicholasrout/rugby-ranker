@@ -27,12 +27,15 @@ object Versions {
         const val browser = "1.3.0-beta01"
         const val lifecycle = "2.3.0-beta01"
         const val room = "2.3.0-alpha03"
-        const val paging = "3.0.0-alpha08"
         const val navigation = "2.3.1"
         const val work = "2.5.0-beta01"
         const val hilt = "1.0.0-alpha02"
         const val dataStore = "1.0.0-alpha02"
         const val compose = "1.0.0-alpha06"
+        object Paging {
+            const val paging = "3.0.0-alpha08"
+            const val compose = "1.0.0-alpha01"
+        }
         object Test {
             const val core = "1.3.1-alpha02"
             const val jUnit = "1.1.3-alpha02"
@@ -93,7 +96,8 @@ object Libs {
             const val ktx = "androidx.room:room-ktx:${Versions.AndroidX.room}"
         }
         object Paging {
-            const val runtime = "androidx.paging:paging-runtime:${Versions.AndroidX.paging}"
+            const val runtime = "androidx.paging:paging-runtime:${Versions.AndroidX.Paging.paging}"
+            const val compose = "androidx.paging:paging-compose:${Versions.AndroidX.Paging.compose}"
         }
         object Navigation {
             const val uiKtx = "androidx.navigation:navigation-ui-ktx:${Versions.AndroidX.navigation}"

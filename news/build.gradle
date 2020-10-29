@@ -38,6 +38,7 @@ dependencies {
     implementation Libs.coil
     implementation Libs.Accompanist.coil
     implementation Libs.AndroidX.Paging.runtime
+    implementation Libs.AndroidX.Paging.compose
     implementation Libs.Google.Hilt.android
     kapt Libs.Google.Hilt.compiler
     kapt Libs.AndroidX.Hilt.compiler
