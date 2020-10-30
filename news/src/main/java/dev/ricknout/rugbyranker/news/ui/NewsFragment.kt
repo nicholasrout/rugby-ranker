@@ -289,28 +289,26 @@ class NewsFragment : Fragment() {
         index: Int,
         onClick: () -> Unit
     ) {
-        MdcTheme {
-            val color = when {
-                (spanCount % 2 != 0 || row % 2 == 0) && index % 2 == 0 -> {
-                    MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
-                }
-                (spanCount % 2 == 0 && row % 2 != 0) && index % 2 != 0 -> {
-                    MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
-                }
-                else -> MaterialTheme.colors.surface
+        val color = when {
+            (spanCount % 2 != 0 || row % 2 == 0) && index % 2 == 0 -> {
+                MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
             }
-            val interactionState = remember { InteractionState() }
-            Surface(
-                shape = MaterialTheme.shapes.medium,
-                color = color,
-                contentColor = MaterialTheme.colors.onSurface,
-                modifier = Modifier.clickable(
-                    onClick = onClick,
-                    interactionState = interactionState
-                )
-            ) {
-                NewsContent(news)
+            (spanCount % 2 == 0 && row % 2 != 0) && index % 2 != 0 -> {
+                MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
             }
+            else -> MaterialTheme.colors.surface
+        }
+        val interactionState = remember { InteractionState() }
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            color = color,
+            contentColor = MaterialTheme.colors.onSurface,
+            modifier = Modifier.clickable(
+                onClick = onClick,
+                interactionState = interactionState
+            )
+        ) {
+            NewsContent(news)
         }
     }
 
