@@ -8,6 +8,7 @@ import androidx.compose.animation.animate
 import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,33 +17,45 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.lazy.ExperimentalLazyDsl
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.AmbientEmphasisLevels
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideEmphasis
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import com.google.android.material.composethemeadapter.MdcTheme
@@ -57,6 +70,7 @@ import dev.ricknout.rugbyranker.core.util.HorizontalSide
 import dev.ricknout.rugbyranker.core.util.InsetsAmbient
 import dev.ricknout.rugbyranker.core.util.ProvideDisplayInsets
 import dev.ricknout.rugbyranker.core.util.navigationBarWidth
+import dev.ricknout.rugbyranker.core.util.navigationBarsPadding
 import dev.ricknout.rugbyranker.core.util.statusBarsPadding
 import dev.ricknout.rugbyranker.core.util.toPaddingValues
 import dev.ricknout.rugbyranker.news.R
@@ -64,6 +78,7 @@ import dev.ricknout.rugbyranker.news.model.News
 import dev.ricknout.rugbyranker.news.model.Type
 import dev.ricknout.rugbyranker.theme.ui.ThemeViewModel
 import dev.ricknout.rugbyranker.theme.util.getCustomTabsIntentColorScheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -157,17 +172,29 @@ class NewsFragment : Fragment() {
     binding.retryButton.setOnClickListener { adapter.retry() }*/
 
     // TODO: Use LazyGrid over LazyColumn when available: https://issuetracker.google.com/issues/162213211
-    // TODO: Listen to paging load state and...
     // TODO: Implement swipe refresh UI
-    // TODO: Implement retry UI
-    // TODO: Implement progress indicator UI
-    // TODO: Implement snackbar UI in Scaffold
     @Composable
-    fun News(newsViewModel: NewsViewModel) {
+    @OptIn(ExperimentalMaterialApi::class)
+    fun News(viewModel: NewsViewModel) {
         MdcTheme {
             ProvideDisplayInsets {
+                val scaffoldState = rememberScaffoldState()
+                val scope = rememberCoroutineScope()
                 val lazyListState = rememberLazyListState()
                 Scaffold(
+                    scaffoldState = scaffoldState,
+                    snackbarHost = { snackbarHostState ->
+                        SnackbarHost(
+                            hostState = snackbarHostState,
+                            snackbar = { snackbarData ->
+                                Snackbar(
+                                    snackbarData = snackbarData,
+                                    // Snackbar already applies padding of 12dp (16dp - 12dp = 4dp)
+                                    modifier = Modifier.padding(4.dp).navigationBarsPadding()
+                                )
+                            }
+                        )
+                    },
                     topBar = {
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
@@ -185,21 +212,51 @@ class NewsFragment : Fragment() {
                                 Spacer(Modifier.navigationBarWidth(HorizontalSide.Right))
                             }
                         }
+                    },
+                    bodyContent = {
+                        val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
+                        NewsList(lazyPagingItems, lazyListState, scope, scaffoldState)
                     }
-                ) {
-                    NewsList(newsViewModel, lazyListState)
-                }
+                )
             }
         }
     }
 
     @Composable
-    @OptIn(ExperimentalLazyDsl::class)
+    @OptIn(ExperimentalLazyDsl::class, ExperimentalMaterialApi::class)
     fun NewsList(
-        newsViewModel: NewsViewModel,
-        lazyListState: LazyListState
+        lazyPagingItems: LazyPagingItems<News>,
+        lazyListState: LazyListState,
+        scope: CoroutineScope,
+        scaffoldState: ScaffoldState
     ) {
-        val lazyPagingItems = newsViewModel.news.collectAsLazyPagingItems()
+        when (lazyPagingItems.loadState.refresh) {
+            is LoadState.Loading -> {
+                if (lazyPagingItems.itemCount == 0) {
+                    Loading()
+                }
+            }
+            is LoadState.NotLoading -> {
+
+            }
+            is LoadState.Error -> {
+                if (lazyPagingItems.itemCount == 0) {
+                    Retry(onClick = {
+                        // TODO: Refresh using LazyPagingItems when supported?
+                        // https://issuetracker.google.com/issues/172041660
+                        newsViewModel.refreshNews()
+                    })
+                } else {
+                    val message = stringResource(id = R.string.failed_to_refresh_news)
+                    scope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = message,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
+        }
         LazyColumn(
             state = lazyListState,
             contentPadding = InsetsAmbient.current.navigationBars.toPaddingValues(top = false)
@@ -303,6 +360,37 @@ class NewsFragment : Fragment() {
                     text = date,
                     style = MaterialTheme.typography.body1
                 )
+            }
+        }
+    }
+
+    @Composable
+    fun Loading() {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            alignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
+    @Composable
+    fun Retry(onClick: () -> Unit) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ProvideEmphasis(emphasis = AmbientEmphasisLevels.current.medium) {
+                Icon(
+                    asset = vectorResource(id = R.drawable.ic_error),
+                    modifier = Modifier
+                        .preferredHeight(107.dp)
+                        .padding(top = 16.dp, bottom = 16.dp)
+                )
+            }
+            RugbyRankerButton(onClick = onClick) {
+                Text(text = stringResource(id = R.string.retry))
             }
         }
     }

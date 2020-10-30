@@ -112,26 +112,27 @@ class InfoFragment : Fragment() {
                                 Spacer(Modifier.navigationBarWidth(HorizontalSide.Right))
                             }
                         }
+                    },
+                    bodyContent = {
+                        ScrollableColumn(
+                            scrollState = scrollState,
+                            contentPadding = InsetsAmbient.current.navigationBars.toPaddingValues(top = false)
+                        ) {
+                            UrlButton(
+                                text = stringResource(R.string.how_are_rankings_calculated),
+                                url = RANKINGS_EXPLANATION_URL
+                            )
+                            ShareButton()
+                            UrlButton(
+                                text = stringResource(R.string.view_source_code),
+                                url = GITHUB_URL
+                            )
+                            OssButton()
+                            ThemeButton()
+                            VersionText(infoViewModel = infoViewModel)
+                        }
                     }
-                ) {
-                    ScrollableColumn(
-                        scrollState = scrollState,
-                        contentPadding = InsetsAmbient.current.navigationBars.toPaddingValues(top = false)
-                    ) {
-                        UrlButton(
-                            text = stringResource(R.string.how_are_rankings_calculated),
-                            url = RANKINGS_EXPLANATION_URL
-                        )
-                        ShareButton()
-                        UrlButton(
-                            text = stringResource(R.string.view_source_code),
-                            url = GITHUB_URL
-                        )
-                        OssButton()
-                        ThemeButton()
-                        VersionText(infoViewModel = infoViewModel)
-                    }
-                }
+                )
             }
         }
     }
