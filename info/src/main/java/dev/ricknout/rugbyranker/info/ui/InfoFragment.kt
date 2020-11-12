@@ -7,22 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.animate
 import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.AmbientEmphasisLevels
+import androidx.compose.material.AmbientContentAlpha
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProvideEmphasis
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Providers
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -38,15 +39,15 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.transition.MaterialFadeThrough
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.accompanist.insets.AmbientWindowInsets
+import dev.chrisbanes.accompanist.insets.HorizontalSide
+import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
+import dev.chrisbanes.accompanist.insets.navigationBarsWidth
+import dev.chrisbanes.accompanist.insets.statusBarsPadding
+import dev.chrisbanes.accompanist.insets.toPaddingValues
 import dev.ricknout.rugbyranker.core.ui.RugbyRankerButton
 import dev.ricknout.rugbyranker.core.ui.openDrawer
 import dev.ricknout.rugbyranker.core.util.CustomTabUtils
-import dev.ricknout.rugbyranker.core.util.HorizontalSide
-import dev.ricknout.rugbyranker.core.util.InsetsAmbient
-import dev.ricknout.rugbyranker.core.util.ProvideDisplayInsets
-import dev.ricknout.rugbyranker.core.util.navigationBarWidth
-import dev.ricknout.rugbyranker.core.util.statusBarsPadding
-import dev.ricknout.rugbyranker.core.util.toPaddingValues
 import dev.ricknout.rugbyranker.info.R
 import dev.ricknout.rugbyranker.theme.ui.ThemeViewModel
 import dev.ricknout.rugbyranker.theme.util.getCustomTabsIntentColorScheme
@@ -92,7 +93,7 @@ class InfoFragment : Fragment() {
     @Composable
     fun Info() {
         MdcTheme {
-            ProvideDisplayInsets {
+            ProvideWindowInsets {
                 val scrollState = rememberScrollState()
                 Scaffold(
                     topBar = {
@@ -101,7 +102,7 @@ class InfoFragment : Fragment() {
                             elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
                         ) {
                             Row(modifier = Modifier.statusBarsPadding()) {
-                                Spacer(Modifier.navigationBarWidth(HorizontalSide.Left))
+                                Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
                                 RugbyRankerButton(
                                     onClick = { openDrawer() },
                                     contentColor = MaterialTheme.colors.onSurface,
@@ -109,14 +110,14 @@ class InfoFragment : Fragment() {
                                 ) {
                                     Icon(Icons.Default.Menu)
                                 }
-                                Spacer(Modifier.navigationBarWidth(HorizontalSide.Right))
+                                Spacer(Modifier.navigationBarsWidth(HorizontalSide.Right))
                             }
                         }
                     },
                     bodyContent = {
                         ScrollableColumn(
                             scrollState = scrollState,
-                            contentPadding = InsetsAmbient.current.navigationBars.toPaddingValues(top = false)
+                            contentPadding = AmbientWindowInsets.current.navigationBars.toPaddingValues(top = false)
                         ) {
                             UrlButton(
                                 text = stringResource(R.string.how_are_rankings_calculated),
@@ -209,13 +210,13 @@ class InfoFragment : Fragment() {
     @Composable
     fun VersionText(infoViewModel: InfoViewModel) {
         val version by infoViewModel.version.observeAsState()
-        ProvideEmphasis(emphasis = AmbientEmphasisLevels.current.medium) {
+        Providers(AmbientContentAlpha provides ContentAlpha.medium, children = {
             Text(
                 text = stringResource(R.string.version, version ?: ""),
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier.height(56.dp).padding(16.dp)
             )
-        }
+        })
     }
 
     companion object {

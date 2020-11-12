@@ -8,10 +8,8 @@ import dev.ricknout.rugbyranker.news.model.Type
 
 open class NewsViewModel(
     type: Type,
-    private val repository: NewsRepository
+    repository: NewsRepository
 ) : ViewModel() {
 
     val news = repository.loadNews(type).cachedIn(viewModelScope)
-
-    fun refreshNews() = repository.refreshNews()
 }

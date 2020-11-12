@@ -2,7 +2,6 @@ package dev.ricknout.rugbyranker.core.ui
 
 import androidx.compose.foundation.AmbientIndication
 import androidx.compose.foundation.InteractionState
-import androidx.compose.foundation.ProvideTextStyle
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSizeConstraints
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Surface
 import androidx.compose.material.ripple.RippleIndication
 import androidx.compose.runtime.Composable

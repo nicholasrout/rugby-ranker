@@ -11,23 +11,14 @@ import kotlinx.coroutines.flow.Flow
 
 class NewsRepository(private val service: WorldRugbyService) {
 
-    private lateinit var pagingSource: NewsPagingSource
-
     fun loadNews(type: Type): Flow<PagingData<News>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
                 initialLoadSize = PAGE_SIZE
             ),
-            pagingSourceFactory = {
-                pagingSource = NewsPagingSource(type, this)
-                pagingSource
-            }
+            pagingSourceFactory = { NewsPagingSource(type, this) }
         ).flow
-    }
-
-    fun refreshNews() {
-        if (::pagingSource.isInitialized) pagingSource.invalidate()
     }
 
     suspend fun fetchLatestNewsSync(
