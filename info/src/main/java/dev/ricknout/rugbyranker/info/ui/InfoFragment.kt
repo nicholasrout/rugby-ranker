@@ -210,13 +210,16 @@ class InfoFragment : Fragment() {
     @Composable
     fun VersionText(infoViewModel: InfoViewModel) {
         val version by infoViewModel.version.observeAsState()
-        Providers(AmbientContentAlpha provides ContentAlpha.medium, children = {
-            Text(
-                text = stringResource(R.string.version, version ?: ""),
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.height(56.dp).padding(16.dp)
-            )
-        })
+        Providers(
+            AmbientContentAlpha provides ContentAlpha.medium,
+            children = {
+                Text(
+                    text = stringResource(R.string.version, version ?: ""),
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.height(56.dp).padding(16.dp)
+                )
+            }
+        )
     }
 
     companion object {

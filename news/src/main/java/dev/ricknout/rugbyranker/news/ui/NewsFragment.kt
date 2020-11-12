@@ -237,13 +237,14 @@ class NewsFragment : Fragment() {
                 }
             }
             is LoadState.NotLoading -> {
-
             }
             is LoadState.Error -> {
                 if (lazyPagingItems.itemCount == 0) {
-                    Retry(onClick = {
-                        lazyPagingItems.refresh()
-                    })
+                    Retry(
+                        onClick = {
+                            lazyPagingItems.refresh()
+                        }
+                    )
                 } else {
                     val message = stringResource(id = R.string.failed_to_refresh_news)
                     scope.launch {
@@ -350,13 +351,16 @@ class NewsFragment : Fragment() {
             } else {
                 DateUtils.getDate(DateUtils.DATE_FORMAT_D_MMM_YYYY, news.timeMillis)
             }
-            Providers(AmbientContentAlpha provides ContentAlpha.medium, children = {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                    text = date,
-                    style = MaterialTheme.typography.body1
-                )
-            })
+            Providers(
+                AmbientContentAlpha provides ContentAlpha.medium,
+                children = {
+                    Text(
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        text = date,
+                        style = MaterialTheme.typography.body1
+                    )
+                }
+            )
         }
     }
 
@@ -377,14 +381,17 @@ class NewsFragment : Fragment() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Providers(AmbientContentAlpha provides ContentAlpha.medium, children = {
-                Icon(
-                    asset = vectorResource(id = R.drawable.ic_error),
-                    modifier = Modifier
-                        .preferredHeight(107.dp)
-                        .padding(top = 16.dp, bottom = 16.dp)
-                )
-            })
+            Providers(
+                AmbientContentAlpha provides ContentAlpha.medium,
+                children = {
+                    Icon(
+                        asset = vectorResource(id = R.drawable.ic_error),
+                        modifier = Modifier
+                            .preferredHeight(107.dp)
+                            .padding(top = 16.dp, bottom = 16.dp)
+                    )
+                }
+            )
             RugbyRankerButton(onClick = onClick) {
                 Text(text = stringResource(id = R.string.retry))
             }
