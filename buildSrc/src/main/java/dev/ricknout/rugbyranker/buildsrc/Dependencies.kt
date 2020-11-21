@@ -4,13 +4,13 @@ object Versions {
     const val compileSdk = 30
     const val minSdk = 24
     const val targetSdk = 30
-    const val androidGradlePlugin = "4.2.0-alpha15"
+    const val androidGradlePlugin = "4.2.0-alpha16"
     const val ktlint = "0.39.0"
     const val coil = "1.0.0"
     const val insetter = "0.3.1"
     const val accompanist = "0.3.3.1"
     object Kotlin {
-        const val kotlin = "1.4.10"
+        const val kotlin = "1.4.20"
         const val coroutines = "1.4.1"
     }
     object AndroidX {
@@ -18,7 +18,7 @@ object Versions {
         const val activity = "1.2.0-beta01"
         const val fragment = "1.3.0-beta01"
         const val appCompat = "1.3.0-alpha02"
-        const val constraintLayout = "2.0.4"
+        const val constraintLayout = "2.1.0-alpha1"
         const val recyclerView = "1.2.0-alpha06"
         const val drawerLayout = "1.1.1"
         const val swipeRefreshLayout = "1.2.0-alpha01"
@@ -30,7 +30,7 @@ object Versions {
         const val navigation = "2.3.1"
         const val work = "2.5.0-beta01"
         const val hilt = "1.0.0-alpha02"
-        const val dataStore = "1.0.0-alpha03"
+        const val dataStore = "1.0.0-alpha04"
         const val compose = "1.0.0-alpha07"
         object Paging {
             const val paging = "3.0.0-alpha09"
@@ -44,7 +44,7 @@ object Versions {
     }
     object Google {
         const val material = "1.3.0-alpha03"
-        const val hilt = "2.29.1-alpha"
+        const val hilt = "2.30-alpha"
         object OssLicenses {
             const val ossLicenses = "17.0.0"
             const val gradlePlugin = "0.10.2"
