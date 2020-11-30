@@ -6,12 +6,12 @@ object Versions {
     const val targetSdk = 30
     const val androidGradlePlugin = "4.2.0-alpha16"
     const val ktlint = "0.39.0"
-    const val coil = "1.0.0"
+    const val coil = "1.1.0"
     const val insetter = "0.3.1"
     const val accompanist = "0.3.3.1"
     object Kotlin {
         const val kotlin = "1.4.20"
-        const val coroutines = "1.4.1"
+        const val coroutines = "1.4.2"
     }
     object AndroidX {
         const val core = "1.5.0-alpha05"
