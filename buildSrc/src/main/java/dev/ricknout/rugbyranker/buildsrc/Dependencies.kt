@@ -4,11 +4,11 @@ object Versions {
     const val compileSdk = 30
     const val minSdk = 24
     const val targetSdk = 30
-    const val androidGradlePlugin = "4.2.0-alpha16"
+    const val androidGradlePlugin = "7.0.0-alpha01"
     const val ktlint = "0.39.0"
     const val coil = "1.1.0"
     const val insetter = "0.3.1"
-    const val accompanist = "0.3.3.1"
+    const val accompanist = "0.4.0"
     object Kotlin {
         const val kotlin = "1.4.20"
         const val coroutines = "1.4.2"
@@ -31,10 +31,10 @@ object Versions {
         const val work = "2.5.0-beta01"
         const val hilt = "1.0.0-alpha02"
         const val dataStore = "1.0.0-alpha04"
-        const val compose = "1.0.0-alpha07"
+        const val compose = "1.0.0-alpha08"
         object Paging {
             const val paging = "3.0.0-alpha09"
-            const val compose = "1.0.0-alpha02"
+            const val compose = "1.0.0-alpha03"
         }
         object Test {
             const val core = "1.3.1-alpha02"
@@ -129,7 +129,7 @@ object Libs {
             }
             object UI {
                 const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
-                const val tooling = "androidx.ui:ui-tooling:${Versions.AndroidX.compose}"
+                const val tooling = "androidx.compose.ui:ui-tooling:${Versions.AndroidX.compose}"
             }
             object Material {
                 const val material = "androidx.compose.material:material:${Versions.AndroidX.compose}"

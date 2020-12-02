@@ -41,7 +41,7 @@ import com.google.android.material.transition.MaterialFadeThrough
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.AmbientWindowInsets
 import dev.chrisbanes.accompanist.insets.HorizontalSide
-import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
+import dev.chrisbanes.accompanist.insets.ViewWindowInsetObserver
 import dev.chrisbanes.accompanist.insets.navigationBarsWidth
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import dev.chrisbanes.accompanist.insets.toPaddingValues
@@ -79,8 +79,12 @@ class InfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         isTransitionGroup = true
+        val observer = ViewWindowInsetObserver(this)
+        val windowInsets = observer.start()
         setContent {
-            Info()
+            Providers(AmbientWindowInsets provides windowInsets) {
+                Info()
+            }
         }
     }
 
@@ -93,48 +97,46 @@ class InfoFragment : Fragment() {
     @Composable
     fun Info() {
         MdcTheme {
-            ProvideWindowInsets {
-                val scrollState = rememberScrollState()
-                Scaffold(
-                    topBar = {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
-                        ) {
-                            Row(modifier = Modifier.statusBarsPadding()) {
-                                Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
-                                RugbyRankerButton(
-                                    onClick = { openDrawer() },
-                                    contentColor = MaterialTheme.colors.onSurface,
-                                    rippleColor = MaterialTheme.colors.onSurface
-                                ) {
-                                    Icon(Icons.Default.Menu)
-                                }
-                                Spacer(Modifier.navigationBarsWidth(HorizontalSide.Right))
+            val scrollState = rememberScrollState()
+            Scaffold(
+                topBar = {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
+                    ) {
+                        Row(modifier = Modifier.statusBarsPadding()) {
+                            Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
+                            RugbyRankerButton(
+                                onClick = { openDrawer() },
+                                contentColor = MaterialTheme.colors.onSurface,
+                                rippleColor = MaterialTheme.colors.onSurface
+                            ) {
+                                Icon(Icons.Default.Menu)
                             }
-                        }
-                    },
-                    bodyContent = {
-                        ScrollableColumn(
-                            scrollState = scrollState,
-                            contentPadding = AmbientWindowInsets.current.navigationBars.toPaddingValues(top = false)
-                        ) {
-                            UrlButton(
-                                text = stringResource(R.string.how_are_rankings_calculated),
-                                url = RANKINGS_EXPLANATION_URL
-                            )
-                            ShareButton()
-                            UrlButton(
-                                text = stringResource(R.string.view_source_code),
-                                url = GITHUB_URL
-                            )
-                            OssButton()
-                            ThemeButton()
-                            VersionText(infoViewModel = infoViewModel)
+                            Spacer(Modifier.navigationBarsWidth(HorizontalSide.Right))
                         }
                     }
-                )
-            }
+                },
+                bodyContent = {
+                    ScrollableColumn(
+                        scrollState = scrollState,
+                        contentPadding = AmbientWindowInsets.current.navigationBars.toPaddingValues(top = false)
+                    ) {
+                        UrlButton(
+                            text = stringResource(R.string.how_are_rankings_calculated),
+                            url = RANKINGS_EXPLANATION_URL
+                        )
+                        ShareButton()
+                        UrlButton(
+                            text = stringResource(R.string.view_source_code),
+                            url = GITHUB_URL
+                        )
+                        OssButton()
+                        ThemeButton()
+                        VersionText(infoViewModel = infoViewModel)
+                    }
+                }
+            )
         }
     }
 
@@ -212,7 +214,7 @@ class InfoFragment : Fragment() {
         val version by infoViewModel.version.observeAsState()
         Providers(
             AmbientContentAlpha provides ContentAlpha.medium,
-            children = {
+            content = {
                 Text(
                     text = stringResource(R.string.version, version ?: ""),
                     style = MaterialTheme.typography.body1,

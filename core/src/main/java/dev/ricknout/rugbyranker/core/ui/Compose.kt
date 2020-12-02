@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Surface
-import androidx.compose.material.ripple.RippleIndication
+import androidx.compose.material.ripple.rememberRippleIndication
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,7 +37,7 @@ fun RugbyRankerButton(
         modifier = modifier.clickable(
             onClick = onClick,
             interactionState = interactionState,
-            indication = RippleIndication(color = rippleColor)
+            indication = rememberRippleIndication(color = rippleColor)
         )
     ) {
         ProvideTextStyle(
@@ -50,7 +50,7 @@ fun RugbyRankerButton(
                     .padding(PaddingValues(16.dp)),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
-                children = content
+                content = content
             )
         }
     }

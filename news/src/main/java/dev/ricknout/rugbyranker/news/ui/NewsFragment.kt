@@ -64,7 +64,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.coil.CoilImage
 import dev.chrisbanes.accompanist.insets.AmbientWindowInsets
 import dev.chrisbanes.accompanist.insets.HorizontalSide
-import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
+import dev.chrisbanes.accompanist.insets.ViewWindowInsetObserver
 import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 import dev.chrisbanes.accompanist.insets.navigationBarsWidth
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
@@ -116,8 +116,12 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = ComposeView(requireContext()).apply {
         isTransitionGroup = true
+        val observer = ViewWindowInsetObserver(this)
+        val windowInsets = observer.start()
         setContent {
-            News(newsViewModel)
+            Providers(AmbientWindowInsets provides windowInsets) {
+                News(newsViewModel)
+            }
         }
     }
 
@@ -177,48 +181,46 @@ class NewsFragment : Fragment() {
     @OptIn(ExperimentalMaterialApi::class)
     fun News(viewModel: NewsViewModel) {
         MdcTheme {
-            ProvideWindowInsets {
-                val scaffoldState = rememberScaffoldState()
-                val scope = rememberCoroutineScope()
-                val lazyListState = rememberLazyListState()
-                Scaffold(
-                    scaffoldState = scaffoldState,
-                    snackbarHost = { snackbarHostState ->
-                        SnackbarHost(
-                            hostState = snackbarHostState,
-                            snackbar = { snackbarData ->
-                                Snackbar(
-                                    snackbarData = snackbarData,
-                                    // Snackbar already applies padding of 12dp (16dp - 12dp = 4dp)
-                                    modifier = Modifier.padding(4.dp).navigationBarsPadding()
-                                )
-                            }
-                        )
-                    },
-                    topBar = {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            elevation = animate(if (lazyListState.firstVisibleItemScrollOffset > 0f) 4.dp else 0.dp)
-                        ) {
-                            Row(modifier = Modifier.statusBarsPadding()) {
-                                Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
-                                RugbyRankerButton(
-                                    onClick = { openDrawer() },
-                                    contentColor = MaterialTheme.colors.onSurface,
-                                    rippleColor = MaterialTheme.colors.onSurface
-                                ) {
-                                    Icon(Icons.Default.Menu)
-                                }
-                                Spacer(Modifier.navigationBarsWidth(HorizontalSide.Right))
-                            }
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
+            val lazyListState = rememberLazyListState()
+            Scaffold(
+                scaffoldState = scaffoldState,
+                snackbarHost = { snackbarHostState ->
+                    SnackbarHost(
+                        hostState = snackbarHostState,
+                        snackbar = { snackbarData ->
+                            Snackbar(
+                                snackbarData = snackbarData,
+                                // Snackbar already applies padding of 12dp (16dp - 12dp = 4dp)
+                                modifier = Modifier.padding(4.dp).navigationBarsPadding()
+                            )
                         }
-                    },
-                    bodyContent = {
-                        val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
-                        NewsList(lazyPagingItems, lazyListState, scope, scaffoldState)
+                    )
+                },
+                topBar = {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = animate(if (lazyListState.firstVisibleItemScrollOffset > 0f) 4.dp else 0.dp)
+                    ) {
+                        Row(modifier = Modifier.statusBarsPadding()) {
+                            Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
+                            RugbyRankerButton(
+                                onClick = { openDrawer() },
+                                contentColor = MaterialTheme.colors.onSurface,
+                                rippleColor = MaterialTheme.colors.onSurface
+                            ) {
+                                Icon(Icons.Default.Menu)
+                            }
+                            Spacer(Modifier.navigationBarsWidth(HorizontalSide.Right))
+                        }
                     }
-                )
-            }
+                },
+                bodyContent = {
+                    val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
+                    NewsList(lazyPagingItems, lazyListState, scope, scaffoldState)
+                }
+            )
         }
     }
 
@@ -322,7 +324,7 @@ class NewsFragment : Fragment() {
                 loading = {
                     Box(Modifier.fillMaxSize()) {
                         Icon(
-                            asset = Icons.Outlined.Image,
+                            imageVector = Icons.Outlined.Image,
                             tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
                             modifier = Modifier.align(Alignment.Center)
                         )
@@ -353,7 +355,7 @@ class NewsFragment : Fragment() {
             }
             Providers(
                 AmbientContentAlpha provides ContentAlpha.medium,
-                children = {
+                content = {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                         text = date,
@@ -368,7 +370,7 @@ class NewsFragment : Fragment() {
     fun Loading() {
         Box(
             modifier = Modifier.fillMaxSize(),
-            alignment = Alignment.Center
+            contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
         }
@@ -383,9 +385,9 @@ class NewsFragment : Fragment() {
         ) {
             Providers(
                 AmbientContentAlpha provides ContentAlpha.medium,
-                children = {
+                content = {
                     Icon(
-                        asset = vectorResource(id = R.drawable.ic_error),
+                        imageVector = vectorResource(id = R.drawable.ic_error),
                         modifier = Modifier
                             .preferredHeight(107.dp)
                             .padding(top = 16.dp, bottom = 16.dp)
