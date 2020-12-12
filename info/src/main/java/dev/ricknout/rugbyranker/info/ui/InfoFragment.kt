@@ -1,6 +1,7 @@
 package dev.ricknout.rugbyranker.info.ui
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -120,13 +121,16 @@ class InfoFragment : Fragment() {
                 bodyContent = {
                     ScrollableColumn(
                         scrollState = scrollState,
-                        contentPadding = AmbientWindowInsets.current.navigationBars.toPaddingValues(top = false)
+                        contentPadding = AmbientWindowInsets.current.navigationBars.toPaddingValues(
+                            top = false
+                        )
                     ) {
                         UrlButton(
                             text = stringResource(R.string.how_are_rankings_calculated),
                             url = RANKINGS_EXPLANATION_URL
                         )
                         ShareButton()
+                        GooglePlayButton()
                         UrlButton(
                             text = stringResource(R.string.view_source_code),
                             url = GITHUB_URL
@@ -162,13 +166,26 @@ class InfoFragment : Fragment() {
     }
 
     @Composable
+    fun GooglePlayButton() {
+        RugbyRankerButton(
+            onClick = {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_URL))
+                startActivity(intent)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(R.string.view_on_google_play))
+        }
+    }
+
+    @Composable
     fun ShareButton() {
         RugbyRankerButton(
             onClick = {
                 val appName = getString(R.string.app_name)
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     putExtra(Intent.EXTRA_SUBJECT, requireContext().getString(R.string.share_subject, appName))
-                    putExtra(Intent.EXTRA_TEXT, requireContext().getString(R.string.share_text, appName, PLAY_STORE_URL))
+                    putExtra(Intent.EXTRA_TEXT, requireContext().getString(R.string.share_text, appName, GOOGLE_PLAY_URL))
                     type = "text/plain"
                 }
                 startActivity(Intent.createChooser(intent, requireContext().getString(R.string.share_title, appName)))
@@ -226,7 +243,7 @@ class InfoFragment : Fragment() {
 
     companion object {
         private const val RANKINGS_EXPLANATION_URL = "https://www.world.rugby/rankings/explanation"
-        private const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.ricknout.rugbyranker"
+        private const val GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=com.ricknout.rugbyranker"
         private const val GITHUB_URL = "https://github.com/ricknout/rugby-ranker"
     }
 }
