@@ -10,7 +10,7 @@ object Versions {
     const val insetter = "0.3.1"
     const val accompanist = "0.4.0"
     object Kotlin {
-        const val kotlin = "1.4.20"
+        const val kotlin = "1.4.21"
         const val coroutines = "1.4.2"
     }
     object AndroidX {
