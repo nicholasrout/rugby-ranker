@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.animate
+import androidx.compose.animation.core.animateAsState
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -103,7 +103,7 @@ class InfoFragment : Fragment() {
                 topBar = {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        elevation = animate(if (scrollState.value > 0f) 4.dp else 0.dp)
+                        elevation = animateAsState(if (scrollState.value > 0f) 4.dp else 0.dp).value
                     ) {
                         Row(modifier = Modifier.statusBarsPadding()) {
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))

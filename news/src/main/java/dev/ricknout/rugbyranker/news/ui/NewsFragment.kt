@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.animate
+import androidx.compose.animation.core.animateAsState
 import androidx.compose.foundation.InteractionState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -201,7 +201,7 @@ class NewsFragment : Fragment() {
                 topBar = {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        elevation = animate(if (lazyListState.firstVisibleItemScrollOffset > 0f) 4.dp else 0.dp)
+                        elevation = animateAsState(if (lazyListState.firstVisibleItemScrollOffset > 0f) 4.dp else 0.dp).value
                     ) {
                         Row(modifier = Modifier.statusBarsPadding()) {
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
