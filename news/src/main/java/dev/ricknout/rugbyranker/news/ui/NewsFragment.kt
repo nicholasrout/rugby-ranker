@@ -175,7 +175,7 @@ class NewsFragment : Fragment() {
     }
     binding.retryButton.setOnClickListener { adapter.retry() }*/
 
-    // TODO: Use LazyGrid over LazyColumn when available: https://issuetracker.google.com/issues/162213211
+    // TODO: Use LazyVerticalGrid over LazyColumn when support for LazyGridScope.itemsIndexed is added to Paging Compose
     // TODO: Implement swipe refresh UI
     @Composable
     @OptIn(ExperimentalMaterialApi::class)
