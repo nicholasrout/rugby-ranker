@@ -6,44 +6,46 @@ object Versions {
     const val targetSdk = 30
     const val androidGradlePlugin = "7.0.0-alpha03"
     const val ktlint = "0.40.0"
-    const val coil = "1.1.0"
-    const val insetter = "0.3.1"
+    const val coil = "1.1.1"
+    const val insetter = "0.4.0"
     const val accompanist = "0.4.0"
     object Kotlin {
         const val kotlin = "1.4.21"
         const val coroutines = "1.4.2"
     }
     object AndroidX {
-        const val core = "1.5.0-alpha05"
-        const val activity = "1.2.0-beta02"
-        const val fragment = "1.3.0-beta02"
-        const val appCompat = "1.3.0-alpha02"
-        const val constraintLayout = "2.1.0-alpha1"
+        const val core = "1.5.0-beta01"
+        const val activity = "1.2.0-rc01"
+        const val fragment = "1.3.0-rc01"
+        const val appCompat = "1.3.0-beta01"
+        const val constraintLayout = "2.1.0-alpha2"
         const val recyclerView = "1.2.0-beta01"
         const val drawerLayout = "1.1.1"
         const val swipeRefreshLayout = "1.2.0-alpha01"
         const val viewPager2 = "1.1.0-alpha01"
         const val emoji = "1.2.0-alpha01"
         const val browser = "1.3.0"
-        const val lifecycle = "2.3.0-beta01"
-        const val room = "2.3.0-alpha03"
+        const val lifecycle = "2.3.0-rc01"
+        const val room = "2.3.0-alpha04"
         const val navigation = "2.3.2"
-        const val work = "2.5.0-beta02"
+        const val work = "2.5.0-rc01"
         const val hilt = "1.0.0-alpha02"
-        const val dataStore = "1.0.0-alpha05"
+        const val dataStore = "1.0.0-alpha06"
         const val compose = "1.0.0-alpha08"
         object Paging {
-            const val paging = "3.0.0-alpha10"
+            const val paging = "3.0.0-alpha12"
             const val compose = "1.0.0-alpha03"
         }
         object Test {
-            const val core = "1.3.1-alpha02"
-            const val jUnit = "1.1.3-alpha02"
-            const val runner = "1.3.1-alpha02"
+            const val core = "1.3.1-alpha03"
+            const val jUnit = "1.1.3-alpha03"
+            const val runner = "1.3.1-alpha03"
         }
     }
     object Google {
-        const val material = "1.3.0-alpha04"
+        const val material = "1.3.0-rc01"
+        // TODO: Update Dagger to 2.31 once issues are resolved
+        // https://github.com/google/dagger/issues/2277
         const val hilt = "2.30.1-alpha"
         object OssLicenses {
             const val ossLicenses = "17.0.0"
@@ -60,6 +62,7 @@ object Libs {
     const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
     const val ktlint = "com.pinterest:ktlint:${Versions.ktlint}"
     const val coil = "io.coil-kt:coil:${Versions.coil}"
+    const val insetter = "dev.chrisbanes.insetter:insetter:${Versions.insetter}"
     object Kotlin {
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.Kotlin.kotlin}"
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Kotlin.kotlin}"
@@ -168,9 +171,6 @@ object Libs {
             const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.Square.retrofit}"
             const val gsonConverter = "com.squareup.retrofit2:converter-gson:${Versions.Square.retrofit}"
         }
-    }
-    object Insetter {
-        const val ktx = "dev.chrisbanes:insetter-ktx:${Versions.insetter}"
     }
     object Accompanist {
         const val coil = "dev.chrisbanes.accompanist:accompanist-coil:${Versions.accompanist}"

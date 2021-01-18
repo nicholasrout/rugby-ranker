@@ -56,7 +56,7 @@ dependencies {
     api Libs.Square.okHttp
     api Libs.Square.Retrofit.retrofit
     api Libs.Square.Retrofit.gsonConverter
-    api Libs.Insetter.ktx
+    api Libs.insetter
     api Libs.AndroidX.Compose.Runtime.runtime
     api Libs.AndroidX.Compose.Runtime.liveData
     api Libs.AndroidX.Compose.Foundation.foundation
