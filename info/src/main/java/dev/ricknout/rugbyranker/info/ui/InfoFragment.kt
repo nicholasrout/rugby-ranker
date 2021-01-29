@@ -6,14 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.core.animateAsState
-import androidx.compose.foundation.ScrollableColumn
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AmbientContentAlpha
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
@@ -103,7 +104,7 @@ class InfoFragment : Fragment() {
                 topBar = {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        elevation = animateAsState(if (scrollState.value > 0f) 4.dp else 0.dp).value
+                        elevation = animateDpAsState(if (scrollState.value > 0f) 4.dp else 0.dp).value
                     ) {
                         Row(modifier = Modifier.statusBarsPadding()) {
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
@@ -112,18 +113,21 @@ class InfoFragment : Fragment() {
                                 contentColor = MaterialTheme.colors.onSurface,
                                 rippleColor = MaterialTheme.colors.onSurface
                             ) {
-                                Icon(Icons.Default.Menu)
+                                Icon(Icons.Default.Menu, contentDescription = null)
                             }
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Right))
                         }
                     }
                 },
                 bodyContent = {
-                    ScrollableColumn(
-                        scrollState = scrollState,
-                        contentPadding = AmbientWindowInsets.current.navigationBars.toPaddingValues(
-                            top = false
-                        )
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(
+                                AmbientWindowInsets.current.navigationBars.toPaddingValues(
+                                    top = false
+                                )
+                            )
                     ) {
                         UrlButton(
                             text = stringResource(R.string.how_are_rankings_calculated),
@@ -235,7 +239,9 @@ class InfoFragment : Fragment() {
                 Text(
                     text = stringResource(R.string.version, version ?: ""),
                     style = MaterialTheme.typography.body1,
-                    modifier = Modifier.height(56.dp).padding(16.dp)
+                    modifier = Modifier
+                        .height(56.dp)
+                        .padding(16.dp)
                 )
             }
         )

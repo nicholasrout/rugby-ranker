@@ -4,8 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.core.animateAsState
-import androidx.compose.foundation.InteractionState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +38,6 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -201,7 +199,7 @@ class NewsFragment : Fragment() {
                 topBar = {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        elevation = animateAsState(if (lazyListState.firstVisibleItemScrollOffset > 0f) 4.dp else 0.dp).value
+                        elevation = animateDpAsState(if (lazyListState.firstVisibleItemScrollOffset > 0f) 4.dp else 0.dp).value
                     ) {
                         Row(modifier = Modifier.statusBarsPadding()) {
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
@@ -210,7 +208,7 @@ class NewsFragment : Fragment() {
                                 contentColor = MaterialTheme.colors.onSurface,
                                 rippleColor = MaterialTheme.colors.onSurface
                             ) {
-                                Icon(Icons.Default.Menu)
+                                Icon(Icons.Default.Menu, contentDescription = null)
                             }
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Right))
                         }
@@ -299,14 +297,12 @@ class NewsFragment : Fragment() {
             }
             else -> MaterialTheme.colors.surface
         }
-        val interactionState = remember { InteractionState() }
         Surface(
             shape = MaterialTheme.shapes.medium,
             color = color,
             contentColor = MaterialTheme.colors.onSurface,
             modifier = Modifier.clickable(
-                onClick = onClick,
-                interactionState = interactionState
+                onClick = onClick
             )
         ) {
             NewsContent(news)
@@ -326,10 +322,12 @@ class NewsFragment : Fragment() {
                         Icon(
                             imageVector = Icons.Outlined.Image,
                             tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
-                            modifier = Modifier.align(Alignment.Center)
+                            modifier = Modifier.align(Alignment.Center),
+                            contentDescription = null
                         )
                     }
-                }
+                },
+                contentDescription = null
             )
             if (news.subtitle != null) Text(
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
@@ -390,7 +388,8 @@ class NewsFragment : Fragment() {
                         imageVector = vectorResource(id = R.drawable.ic_error),
                         modifier = Modifier
                             .preferredHeight(107.dp)
-                            .padding(top = 16.dp, bottom = 16.dp)
+                            .padding(top = 16.dp, bottom = 16.dp),
+                        contentDescription = null
                     )
                 }
             )
