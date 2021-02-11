@@ -19,11 +19,12 @@ import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.AmbientContentAlpha
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
@@ -44,8 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.integerResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -60,14 +61,14 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.transition.MaterialFadeThrough
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.coil.CoilImage
-import dev.chrisbanes.accompanist.insets.AmbientWindowInsets
 import dev.chrisbanes.accompanist.insets.HorizontalSide
+import dev.chrisbanes.accompanist.insets.LocalWindowInsets
 import dev.chrisbanes.accompanist.insets.ViewWindowInsetObserver
 import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 import dev.chrisbanes.accompanist.insets.navigationBarsWidth
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import dev.chrisbanes.accompanist.insets.toPaddingValues
-import dev.ricknout.rugbyranker.core.ui.RugbyRankerButton
+import dev.ricknout.rugbyranker.core.ui.RugbyRankerTextButton
 import dev.ricknout.rugbyranker.core.ui.openDrawer
 import dev.ricknout.rugbyranker.core.util.CustomTabUtils
 import dev.ricknout.rugbyranker.core.util.DateUtils
@@ -117,7 +118,7 @@ class NewsFragment : Fragment() {
         val observer = ViewWindowInsetObserver(this)
         val windowInsets = observer.start()
         setContent {
-            Providers(AmbientWindowInsets provides windowInsets) {
+            Providers(LocalWindowInsets provides windowInsets) {
                 News(newsViewModel)
             }
         }
@@ -191,7 +192,9 @@ class NewsFragment : Fragment() {
                             Snackbar(
                                 snackbarData = snackbarData,
                                 // Snackbar already applies padding of 12dp (16dp - 12dp = 4dp)
-                                modifier = Modifier.padding(4.dp).navigationBarsPadding()
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .navigationBarsPadding()
                             )
                         }
                     )
@@ -203,10 +206,9 @@ class NewsFragment : Fragment() {
                     ) {
                         Row(modifier = Modifier.statusBarsPadding()) {
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
-                            RugbyRankerButton(
+                            RugbyRankerTextButton(
                                 onClick = { openDrawer() },
-                                contentColor = MaterialTheme.colors.onSurface,
-                                rippleColor = MaterialTheme.colors.onSurface
+                                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onSurface)
                             ) {
                                 Icon(Icons.Default.Menu, contentDescription = null)
                             }
@@ -258,7 +260,7 @@ class NewsFragment : Fragment() {
         }
         LazyColumn(
             state = lazyListState,
-            contentPadding = AmbientWindowInsets.current.navigationBars.toPaddingValues(top = false)
+            contentPadding = LocalWindowInsets.current.navigationBars.toPaddingValues(top = false)
         ) {
             itemsIndexed(lazyPagingItems) { index: Int, value: News? ->
                 val news = value ?: return@itemsIndexed
@@ -352,7 +354,7 @@ class NewsFragment : Fragment() {
                 DateUtils.getDate(DateUtils.DATE_FORMAT_D_MMM_YYYY, news.timeMillis)
             }
             Providers(
-                AmbientContentAlpha provides ContentAlpha.medium,
+                LocalContentAlpha provides ContentAlpha.medium,
                 content = {
                     Text(
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -382,10 +384,10 @@ class NewsFragment : Fragment() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Providers(
-                AmbientContentAlpha provides ContentAlpha.medium,
+                LocalContentAlpha provides ContentAlpha.medium,
                 content = {
                     Icon(
-                        imageVector = vectorResource(id = R.drawable.ic_error),
+                        painter = painterResource(id = R.drawable.ic_error),
                         modifier = Modifier
                             .preferredHeight(107.dp)
                             .padding(top = 16.dp, bottom = 16.dp),
@@ -393,7 +395,7 @@ class NewsFragment : Fragment() {
                     )
                 }
             )
-            RugbyRankerButton(onClick = onClick) {
+            RugbyRankerTextButton(onClick = onClick) {
                 Text(text = stringResource(id = R.string.retry))
             }
         }

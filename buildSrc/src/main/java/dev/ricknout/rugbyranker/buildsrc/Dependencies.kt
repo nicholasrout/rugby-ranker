@@ -8,7 +8,7 @@ object Versions {
     const val ktlint = "0.40.0"
     const val coil = "1.1.1"
     const val insetter = "0.4.0"
-    const val accompanist = "0.5.0"
+    const val accompanist = "0.5.1"
     object Kotlin {
         const val kotlin = "1.4.30"
         const val coroutines = "1.4.2"
@@ -25,16 +25,19 @@ object Versions {
         const val viewPager2 = "1.1.0-alpha01"
         const val emoji = "1.2.0-alpha03"
         const val browser = "1.3.0"
-        const val lifecycle = "2.3.0"
         const val room = "2.3.0-beta01"
         const val navigation = "2.3.3"
         const val work = "2.5.0"
         const val hilt = "1.0.0-alpha03"
         const val dataStore = "1.0.0-alpha06"
-        const val compose = "1.0.0-alpha11"
+        const val compose = "1.0.0-alpha12"
+        object Lifecycle {
+            const val lifecycle = "2.3.0"
+            const val compose = "1.0.0-alpha01"
+        }
         object Paging {
             const val paging = "3.0.0-beta01"
-            const val compose = "1.0.0-alpha06"
+            const val compose = "1.0.0-alpha07"
         }
         object Test {
             const val core = "1.4.0-alpha04"
@@ -83,13 +86,15 @@ object Libs {
         }
         object Activity {
             const val ktx = "androidx.activity:activity-ktx:${Versions.AndroidX.activity}"
+            const val compose = "androidx.activity:activity-compose:${Versions.AndroidX.activity}"
         }
         object Fragment {
             const val ktx = "androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}"
         }
         object Lifecycle {
-            const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}"
-            const val liveDataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.lifecycle}"
+            const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.Lifecycle.lifecycle}"
+            const val liveDataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.Lifecycle.lifecycle}"
+            const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.AndroidX.Lifecycle.compose}"
         }
         object Room {
             const val runtime = "androidx.room:room-runtime:${Versions.AndroidX.room}"

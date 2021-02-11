@@ -15,9 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.AmbientContentAlpha
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -41,13 +42,13 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.transition.MaterialFadeThrough
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.accompanist.insets.AmbientWindowInsets
 import dev.chrisbanes.accompanist.insets.HorizontalSide
+import dev.chrisbanes.accompanist.insets.LocalWindowInsets
 import dev.chrisbanes.accompanist.insets.ViewWindowInsetObserver
 import dev.chrisbanes.accompanist.insets.navigationBarsWidth
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import dev.chrisbanes.accompanist.insets.toPaddingValues
-import dev.ricknout.rugbyranker.core.ui.RugbyRankerButton
+import dev.ricknout.rugbyranker.core.ui.RugbyRankerTextButton
 import dev.ricknout.rugbyranker.core.ui.openDrawer
 import dev.ricknout.rugbyranker.core.util.CustomTabUtils
 import dev.ricknout.rugbyranker.info.R
@@ -84,7 +85,7 @@ class InfoFragment : Fragment() {
         val observer = ViewWindowInsetObserver(this)
         val windowInsets = observer.start()
         setContent {
-            Providers(AmbientWindowInsets provides windowInsets) {
+            Providers(LocalWindowInsets provides windowInsets) {
                 Info()
             }
         }
@@ -108,10 +109,9 @@ class InfoFragment : Fragment() {
                     ) {
                         Row(modifier = Modifier.statusBarsPadding()) {
                             Spacer(Modifier.navigationBarsWidth(HorizontalSide.Left))
-                            RugbyRankerButton(
+                            RugbyRankerTextButton(
                                 onClick = { openDrawer() },
-                                contentColor = MaterialTheme.colors.onSurface,
-                                rippleColor = MaterialTheme.colors.onSurface
+                                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.onSurface)
                             ) {
                                 Icon(Icons.Default.Menu, contentDescription = null)
                             }
@@ -124,7 +124,7 @@ class InfoFragment : Fragment() {
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
                             .padding(
-                                AmbientWindowInsets.current.navigationBars.toPaddingValues(
+                                LocalWindowInsets.current.navigationBars.toPaddingValues(
                                     top = false
                                 )
                             )
@@ -150,7 +150,7 @@ class InfoFragment : Fragment() {
 
     @Composable
     fun UrlButton(text: String, url: String) {
-        RugbyRankerButton(
+        RugbyRankerTextButton(
             onClick = {
                 lifecycleScope.launch {
                     val theme = themeViewModel.theme.first()
@@ -171,7 +171,7 @@ class InfoFragment : Fragment() {
 
     @Composable
     fun GooglePlayButton() {
-        RugbyRankerButton(
+        RugbyRankerTextButton(
             onClick = {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_PLAY_URL))
                 startActivity(intent)
@@ -184,7 +184,7 @@ class InfoFragment : Fragment() {
 
     @Composable
     fun ShareButton() {
-        RugbyRankerButton(
+        RugbyRankerTextButton(
             onClick = {
                 val appName = getString(R.string.app_name)
                 val intent = Intent(Intent.ACTION_SEND).apply {
@@ -202,7 +202,7 @@ class InfoFragment : Fragment() {
 
     @Composable
     fun OssButton() {
-        RugbyRankerButton(
+        RugbyRankerTextButton(
             onClick = {
                 val intent = Intent(requireContext(), OssLicensesMenuActivity::class.java)
                 startActivity(intent)
@@ -215,7 +215,7 @@ class InfoFragment : Fragment() {
 
     @Composable
     fun ThemeButton() {
-        RugbyRankerButton(
+        RugbyRankerTextButton(
             onClick = {
                 lifecycleScope.launch {
                     val theme = themeViewModel.theme.first()
@@ -234,7 +234,7 @@ class InfoFragment : Fragment() {
     fun VersionText(infoViewModel: InfoViewModel) {
         val version by infoViewModel.version.observeAsState()
         Providers(
-            AmbientContentAlpha provides ContentAlpha.medium,
+            LocalContentAlpha provides ContentAlpha.medium,
             content = {
                 Text(
                     text = stringResource(R.string.version, version ?: ""),

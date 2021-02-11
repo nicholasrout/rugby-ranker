@@ -66,6 +66,8 @@ dependencies {
     api Libs.AndroidX.Compose.Material.material
     api Libs.AndroidX.Compose.Material.icons
     api Libs.AndroidX.Compose.animation
+    api Libs.AndroidX.Activity.compose
+    api Libs.AndroidX.Lifecycle.viewModelCompose
     api Libs.Accompanist.insets
     testImplementation Libs.AndroidX.Test.JUnit.ktx
     androidTestImplementation Libs.AndroidX.Test.Core.ktx
