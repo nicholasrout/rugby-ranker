@@ -7,7 +7,7 @@ object Versions {
     const val androidGradlePlugin = "7.0.0-alpha06"
     const val ktlint = "0.40.0"
     const val coil = "1.1.1"
-    const val insetter = "0.4.0"
+    const val insetter = "0.5.0"
     const val accompanist = "0.5.1"
     object Kotlin {
         const val kotlin = "1.4.30"
