@@ -14,12 +14,12 @@ object Versions {
         const val coroutines = "1.4.2"
     }
     object AndroidX {
-        const val core = "1.5.0-beta01"
-        const val activity = "1.3.0-alpha02"
+        const val core = "1.5.0-beta02"
+        const val activity = "1.3.0-alpha03"
         const val fragment = "1.3.0"
         const val appCompat = "1.3.0-beta01"
         const val constraintLayout = "2.1.0-alpha2"
-        const val recyclerView = "1.2.0-beta01"
+        const val recyclerView = "1.2.0-beta02"
         const val drawerLayout = "1.1.1"
         const val swipeRefreshLayout = "1.2.0-alpha01"
         const val viewPager2 = "1.1.0-alpha01"
@@ -29,7 +29,7 @@ object Versions {
         const val navigation = "2.3.3"
         const val work = "2.7.0-alpha01"
         const val hilt = "1.0.0-alpha03"
-        const val dataStore = "1.0.0-alpha06"
+        const val dataStore = "1.0.0-alpha07"
         const val compose = "1.0.0-alpha12"
         object Lifecycle {
             const val lifecycle = "2.3.0"
