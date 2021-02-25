@@ -26,7 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -85,7 +85,7 @@ class InfoFragment : Fragment() {
         val observer = ViewWindowInsetObserver(this)
         val windowInsets = observer.start()
         setContent {
-            Providers(LocalWindowInsets provides windowInsets) {
+            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
                 Info()
             }
         }
@@ -119,7 +119,7 @@ class InfoFragment : Fragment() {
                         }
                     }
                 },
-                bodyContent = {
+                content = {
                     Column(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
@@ -233,7 +233,7 @@ class InfoFragment : Fragment() {
     @Composable
     fun VersionText(infoViewModel: InfoViewModel) {
         val version by infoViewModel.version.observeAsState()
-        Providers(
+        CompositionLocalProvider(
             LocalContentAlpha provides ContentAlpha.medium,
             content = {
                 Text(

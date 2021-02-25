@@ -4,11 +4,11 @@ object Versions {
     const val compileSdk = 30
     const val minSdk = 24
     const val targetSdk = 30
-    const val androidGradlePlugin = "7.0.0-alpha07"
+    const val androidGradlePlugin = "7.0.0-alpha08"
     const val ktlint = "0.40.0"
     const val coil = "1.1.1"
     const val insetter = "0.5.0"
-    const val accompanist = "0.5.1"
+    const val accompanist = "0.6.0"
     object Kotlin {
         const val kotlin = "1.4.30"
         const val coroutines = "1.4.2"
@@ -30,14 +30,14 @@ object Versions {
         const val work = "2.7.0-alpha01"
         const val hilt = "1.0.0-alpha03"
         const val dataStore = "1.0.0-alpha07"
-        const val compose = "1.0.0-alpha12"
+        const val compose = "1.0.0-beta01"
         object Lifecycle {
             const val lifecycle = "2.3.0"
-            const val compose = "1.0.0-alpha01"
+            const val compose = "1.0.0-alpha02"
         }
         object Paging {
             const val paging = "3.0.0-beta01"
-            const val compose = "1.0.0-alpha07"
+            const val compose = "1.0.0-alpha08"
         }
         object Test {
             const val core = "1.4.0-alpha04"

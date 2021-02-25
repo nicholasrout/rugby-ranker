@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -38,7 +37,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -118,7 +117,7 @@ class NewsFragment : Fragment() {
         val observer = ViewWindowInsetObserver(this)
         val windowInsets = observer.start()
         setContent {
-            Providers(LocalWindowInsets provides windowInsets) {
+            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
                 News(newsViewModel)
             }
         }
@@ -216,7 +215,7 @@ class NewsFragment : Fragment() {
                         }
                     }
                 },
-                bodyContent = {
+                content = {
                     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
                     NewsList(lazyPagingItems, lazyListState, scope, scaffoldState)
                 }
@@ -353,7 +352,7 @@ class NewsFragment : Fragment() {
             } else {
                 DateUtils.getDate(DateUtils.DATE_FORMAT_D_MMM_YYYY, news.timeMillis)
             }
-            Providers(
+            CompositionLocalProvider(
                 LocalContentAlpha provides ContentAlpha.medium,
                 content = {
                     Text(
@@ -383,13 +382,13 @@ class NewsFragment : Fragment() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Providers(
+            CompositionLocalProvider(
                 LocalContentAlpha provides ContentAlpha.medium,
                 content = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_error),
                         modifier = Modifier
-                            .preferredHeight(107.dp)
+                            .height(107.dp)
                             .padding(top = 16.dp, bottom = 16.dp),
                         contentDescription = null
                     )
