@@ -50,7 +50,6 @@ dependencies {
     api Libs.AndroidX.Work.runtimeKtx
     api Libs.Google.Material.material
     api Libs.Google.Material.composeThemeAdapter
-    api Libs.AndroidX.Hilt.Lifecycle.viewModel
     api Libs.AndroidX.Hilt.work
     api Libs.AndroidX.DataStore.preferences
     api Libs.Square.okHttp
