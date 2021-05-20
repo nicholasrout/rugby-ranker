@@ -8,7 +8,7 @@ object Versions {
     const val ktlint = "0.40.0"
     const val coil = "1.2.1"
     const val insetter = "0.5.0"
-    const val accompanist = "0.9.1"
+    const val accompanist = "0.10.0"
     object Kotlin {
         const val kotlin = "1.4.32"
         const val coroutines = "1.5.0"
@@ -30,14 +30,14 @@ object Versions {
         const val work = "2.7.0-alpha03"
         const val hilt = "1.0.0"
         const val dataStore = "1.0.0-beta01"
-        const val compose = "1.0.0-beta06"
+        const val compose = "1.0.0-beta07"
         object Lifecycle {
             const val lifecycle = "2.4.0-alpha01"
-            const val compose = "1.0.0-alpha04"
+            const val compose = "1.0.0-alpha05"
         }
         object Paging {
             const val paging = "3.0.0"
-            const val compose = "1.0.0-alpha08"
+            const val compose = "1.0.0-alpha09"
         }
         object Test {
             const val core = "1.4.0-beta01"
